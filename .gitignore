@@ -1,3 +1,24 @@
 *.py[co]
 
+# packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed-cfg
+.Python
+pip-log.txt
+
+# unit test reports
+.coverage
+.tox
+nosetests.xml
+
+# project files
 .ropeproject
