@@ -4,6 +4,8 @@ pyqcy :: QuickCheck-like testing framework for Python
 import functools
 import inspect
 
+from .utils import optional_args
+
 
 __all__ = ['arbitrary', 'qc']
 
@@ -77,7 +79,7 @@ class QcProperty(object):
 
 		@functools.wraps(func)
 		def generator_func(*args, **kwargs):
-			func()
+			func(*args, **kwargs)
 			yield
 		return generator_func
 
@@ -113,7 +115,7 @@ class QcProperty(object):
 		try:
 			# so far it's simple
 			while True:
-				next(test_coroutine)
+				next(coroutine)
 		except StopIteration:
 			pass
 
@@ -128,24 +130,3 @@ class qc(object):
 
 	def __call__(self, func):
 		return QcProperty(self.prop_args, self.prop_kwargs, func)
-
-
-## Utilities
-
-def optional_args(decor):
-	"""Decorator for decorators (sic) that are intended to take
-	optional arguments. It supports decorators written both as
-	classes or functions, as long as they are "doubly-callable".
-	For classes, this means implementing `__call__`, while
-	functions must return a function that returns a function
-	that accepts a function... which is obvious, of course.
-	"""
-	@functools.wraps(decor)
-	def wrapped(*args, **kwargs):
-		one_arg = len(args) == 1 and not kwargs
-		if one_arg and inspect.isfunction(args[0]):
-			decor_instance = decor()
-			return decor_instance(args[0])
-		else:
-			return decor(*args, **kwargs)
-	return wrapped
