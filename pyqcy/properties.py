@@ -3,6 +3,7 @@ Properties to be tested.
 Also known as "tests".
 """
 import inspect
+import functools
 
 
 __all__ = ['qc']
@@ -46,10 +47,10 @@ class QcProperty(object):
 		"""
 		# no statistics yet
 		for _ in xrange(count):
-			self.test()
+			self.test_one()
 
 	__call__ = test
-	
+
 
 	def __arbitrary_args(self):
 		"""Returns a list of arbitrary values for positional arguments
