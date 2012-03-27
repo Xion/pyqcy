@@ -8,7 +8,8 @@ import sys
 from .utils import optional_args
 
 
-__all__ = ['arbitrary']
+__all__ = ['arbitrary',
+		   'int_', 'float_', 'complex_']
 
 
 @optional_args
@@ -71,14 +72,19 @@ class arbitrary(object):
 # Arbitrary values' generators for built-in types
 
 @arbitrary(int)
-def int_():
-	return random.randint(0, sys.maxint)
+def int_(min=0, max=sys.maxint):
+	"""Default arbitrary values' generator for the int type."""
+	return random.randint(min, max)
 
 @arbitrary(float)
-def float_():
-	return random.random() * sys.maxint
+def float_(min=-float(sys.maxint), max=float(sys.maxint)):
+	"""Default arbitrary values' generator for the float type."""
+	return min + random.random() * (max - min)
 
 @arbitrary(complex)
-def complex_():
-	floats = float_()
-	return complex(next(floats), next(floats))
+def complex_(min_real=-float(sys.maxint), max_real=float(sys.maxint),
+			 min_imag=-float(sys.maxint), max_imag=float(sys.maxint)):
+	"""Default arbitrary values' generator for the complex type."""
+	reals = float_(min_real, max_real)
+	imags = float_(min_imag, max_imag)
+	return complex(next(reals), next(imags))

@@ -25,8 +25,13 @@ def addition_doesnt_break(x, y):
 	_ = x + y
 
 @qc(two_digit_integers, two_digit_integers)
-def addition_works_correctly(x, y):
+def addition_works_within_hundred(x, y):
 	assert 20 <= x + y < 200
+
+@qc(float_(min=0.0), float_(min=0.0))
+def addition_works_for_positive_floats(x, y):
+	sum = x + y
+	assert sum >= x and sum >= y
 
 @qc(s=str_with_len_lt5)
 def case_transform_preserves_length(s):
@@ -40,12 +45,15 @@ class Basic(unittest.TestCase):
 	"""
 	def test_standard_arbitrary(self):
 		addition_doesnt_break.test()
-		
+
+	def test_standard_arbitrary_with_args(self):
+		addition_works_for_positive_floats.test()
+
 	def test_custom_arbitrary(self):
 		case_transform_preserves_length.test()
 
 	def test_positional_qc_arguments(self):
-		addition_works_correctly.test()
+		addition_works_within_hundred.test()
 
 
 if __name__ == '__main__':
