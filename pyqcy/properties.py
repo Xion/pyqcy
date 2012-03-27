@@ -5,6 +5,8 @@ Also known as "tests".
 import inspect
 import functools
 
+from .arbitraries import arbitrary
+
 
 __all__ = ['qc']
 
@@ -19,23 +21,30 @@ class QcProperty(object):
 		which encodes the testing property, and arbitrary values'
 		generator for both positonal and keyword arguments.
 		"""
-		self.args = map(self.__coerce_to_generator, prop_args)
-		self.kwargs = dict((k, self.__coerce_to_generator(v))
+		self.args = map(self.__coerce_to_arbitrary, prop_args)
+		self.kwargs = dict((k, self.__coerce_to_arbitrary(v))
 						   for k, v in prop_kwargs.iteritems())
 		self.func = self.__coerce_to_generator_func(prop_func)
 
-	def __coerce_to_generator(self, obj):
-		"""Ensures that given object is a generator;
-		This is used to make sure that arbitrary values' generators
-		passed to constructor can be either actual generators
-		or generator functions, i.e. functions that are only
-		about to return generator when called.
+	def __coerce_to_arbitrary(self, obj):
+		"""Ensures that given object is a generator of arbitrary values.
+		Rather than permitting only actual generators, this allows
+		us to pass generator functions or even types, provided
+		there is a know arbitrary generator for them.
 		"""
 		if inspect.isgenerator(obj):
 			return obj
 		if inspect.isgeneratorfunction(obj):
 			return obj()	# fails if arguments are required,
 							# and this is intended
+
+		# looking up types in global registry
+		if isinstance(obj, type):
+			arbit_gens = arbitrary.registry.get(obj)
+			if not arbit_gens:
+				raise TypeError(
+					"no arbitrary values' generator found for type: %s" % obj)
+			return self.__coerce_to_arbitrary(arbit_gens[0])
 
 		raise ValueError(
 			"invalid generator of arbitrary values: %r (of type %s)" % (

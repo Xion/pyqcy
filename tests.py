@@ -19,6 +19,11 @@ def two_digit_integers():
 	return random.randint(10, 99)
 
 
+
+@qc(int, int)
+def addition_doesnt_break(x, y):
+	_ = x + y
+
 @qc(two_digit_integers, two_digit_integers)
 def addition_works_correctly(x, y):
 	assert 20 <= x + y < 200
@@ -33,6 +38,9 @@ def case_transform_preserves_length(s):
 class Basic(unittest.TestCase):
 	"""Basic test cases.
 	"""
+	def test_standard_arbitrary(self):
+		addition_doesnt_break.test()
+		
 	def test_custom_arbitrary(self):
 		case_transform_preserves_length.test()
 
