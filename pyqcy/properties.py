@@ -15,9 +15,31 @@ class QcProperty(object):
 	"""A property that can be QuickChecked.
 	"""
 	def __init__(self, prop_args, prop_kwargs, prop_func):
-		self.args = prop_args
-		self.kwargs = prop_kwargs
+		"""Constructor. Callers should specify the function
+		which encodes the testing property, and arbitrary values'
+		generator for both positonal and keyword arguments.
+		"""
+		self.args = map(self.__coerce_to_generator, prop_args)
+		self.kwargs = dict((k, self.__coerce_to_generator(v))
+						   for k, v in prop_kwargs.iteritems())
 		self.func = self.__coerce_to_generator_func(prop_func)
+
+	def __coerce_to_generator(self, obj):
+		"""Ensures that given object is a generator;
+		This is used to make sure that arbitrary values' generators
+		passed to constructor can be either actual generators
+		or generator functions, i.e. functions that are only
+		about to return generator when called.
+		"""
+		if inspect.isgenerator(obj):
+			return obj
+		if inspect.isgeneratorfunction(obj):
+			return obj()	# fails if arguments are required,
+							# and this is intended
+
+		raise ValueError(
+			"invalid generator of arbitrary values: %r (of type %s)" % (
+				obj, type(obj).__name__))
 
 	def __coerce_to_generator_func(self, func):
 		"""Ensures that given function is a generator function,
@@ -51,16 +73,15 @@ class QcProperty(object):
 
 	__call__ = test
 
-
 	def __arbitrary_args(self):
-		"""Returns a list of arbitrary values for positional arguments
-		for the property function.
+		"""Returns a list of arbitrary values for
+		positional arguments of the property function.
 		"""
 		return map(next, self.args)
 
 	def __arbitrary_kwargs(self):
-		"""Returns a dictionary of arbitrary values for keyword arguments
-		for the property function.
+		"""Returns a dictionary of arbitrary values
+		for keyword arguments of the property function.
 		"""
 		return dict((k, next(v)) for k, v in self.kwargs.iteritems())
 
@@ -69,7 +90,7 @@ class QcProperty(object):
 		such as classifiers or collected values.
 		"""
 		try:
-			# so far it's simple
+			# so far it's simple, no stats
 			while True:
 				next(coroutine)
 		except StopIteration:
