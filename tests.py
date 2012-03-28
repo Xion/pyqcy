@@ -55,6 +55,9 @@ class Basic(unittest.TestCase):
 	def test_positional_qc_arguments(self):
 		addition_works_within_hundred.test()
 
+	def test_runner(self):
+		assert main() == 4
+
 
 if __name__ == '__main__':
 	unittest.main()

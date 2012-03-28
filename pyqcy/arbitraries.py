@@ -32,13 +32,15 @@ class arbitrary(object):
 		for easy reference.
 		"""
 		if self.type_ is None:
-			return self.__normal_generator_function(func)
+			gen_func = self.__normal_generator_function(func)
 		else:
-			gen =  self.__validating_generator_function(func)
+			gen_func =  self.__validating_generator_function(func)
 
 			self.registry.setdefault(self.type_, [])
-			self.registry[self.type_].append(gen)
-			return gen
+			self.registry[self.type_].append(gen_func)
+
+		gen_func._arbitrary = True
+		return gen_func
 
 	def __normal_generator_function(self, func):
 		"""Returns a version of arbitrary generator function
@@ -88,3 +90,10 @@ def complex_(min_real=-float(sys.maxint), max_real=float(sys.maxint),
 	reals = float_(min_real, max_real)
 	imags = float_(min_imag, max_imag)
 	return complex(next(reals), next(imags))
+
+@arbitrary(str)
+def str_(of=int_(min=0, max=255), min_length=1, max_length=64):
+	"""Default arbitrary values' generator for strings."""
+	length = random.randint(min_length, max_length)
+	return ''.join(chr(next(of)) for _ in xrange(length))
+	

@@ -13,7 +13,7 @@ __all__ = ['qc']
 
 DEFAULT_TEST_COUNT = 100
 
-class QcProperty(object):
+class Property(object):
 	"""A property that can be QuickChecked.
 	"""
 	def __init__(self, prop_args, prop_kwargs, prop_func):
@@ -115,4 +115,4 @@ class qc(object):
 		self.prop_kwargs = kwargs
 
 	def __call__(self, func):
-		return QcProperty(self.prop_args, self.prop_kwargs, func)
+		return Property(self.prop_args, self.prop_kwargs, func)
