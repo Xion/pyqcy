@@ -33,6 +33,10 @@ def addition_works_for_positive_floats(x, y):
 	sum = x + y
 	assert sum >= x and sum >= y
 
+@qc
+def subtraction_doesnt_break(x=int, y=int):
+	_ = x + y
+
 @qc(s=str_with_len_lt5)
 def case_transform_preserves_length(s):
 	assert len(s) == len(s.upper())
@@ -55,8 +59,11 @@ class Basic(unittest.TestCase):
 	def test_positional_qc_arguments(self):
 		addition_works_within_hundred.test()
 
+	def test_arbitraries_in_default_args(self):
+		subtraction_doesnt_break.test()
+
 	def test_runner(self):
-		assert main() == 4
+		assert main() == 5
 
 
 if __name__ == '__main__':

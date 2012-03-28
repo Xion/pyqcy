@@ -16,15 +16,15 @@ DEFAULT_TEST_COUNT = 100
 class Property(object):
 	"""A property that can be QuickChecked.
 	"""
-	def __init__(self, prop_args, prop_kwargs, prop_func):
+	def __init__(self, args, kwargs, func):
 		"""Constructor. Callers should specify the function
 		which encodes the testing property, and arbitrary values'
 		generator for both positonal and keyword arguments.
 		"""
-		self.args = map(self.__coerce_to_arbitrary, prop_args)
+		self.args = map(self.__coerce_to_arbitrary, args)
 		self.kwargs = dict((k, self.__coerce_to_arbitrary(v))
-						   for k, v in prop_kwargs.iteritems())
-		self.func = self.__coerce_to_generator_func(prop_func)
+						   for k, v in kwargs.iteritems())
+		self.func = self.__coerce_to_generator_func(func)
 
 	def __coerce_to_arbitrary(self, obj):
 		"""Ensures that given object is a generator of arbitrary values.
@@ -106,9 +106,11 @@ class Property(object):
 			pass
 
 
-class qc(object):
-	"""@qc decorator to be applied on functions that encode
-	QuickCheck properties to be tested.
+# The @qc decorator
+
+class PropertyDecorator(object):
+	"""Class used to implement the @qc decorator
+	which is to be applied on properties.
 	"""
 	def __init__(self, *args, **kwargs):
 		self.prop_args = args
@@ -116,3 +118,28 @@ class qc(object):
 
 	def __call__(self, func):
 		return Property(self.prop_args, self.prop_kwargs, func)
+
+
+def qc(first_arg=None, *args, **kwargs):
+	"""@qc decorator to be applied on functions that encode
+	QuickCheck properties to be tested.
+	"""
+	# applying @qc on function whose default arguments
+	# specify generators of arbitrary values for those arguments
+	parameterless_applicaton = (
+		inspect.isfunction(first_arg) and
+		not getattr(first_arg, '_arbitrary', False) and
+		not (args or kwargs)
+	)
+	if parameterless_applicaton:
+		func_args, _, _, func_defaults = inspect.getargspec(first_arg)
+		free_args_count = len(func_args) - len(func_defaults)
+		if free_args_count > 0:
+			raise TypeError("property has unbound variables: %s" %
+				func_args[:free_args_count])
+		return Property(args=func_defaults, kwargs={}, func=first_arg)
+
+	# typical application, e.g.: @qc(x=int_, y=float_)
+	if first_arg is not None:
+		args = [first_arg] + list(args)
+	return PropertyDecorator(*args, **kwargs)
