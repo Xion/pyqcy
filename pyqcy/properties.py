@@ -5,7 +5,7 @@ Also known as "tests".
 import inspect
 import functools
 
-from .arbitraries import arbitrary
+from .arbitraries import arbitrary, isarbitrary
 
 
 __all__ = ['qc']
@@ -14,8 +14,8 @@ __all__ = ['qc']
 DEFAULT_TEST_COUNT = 100
 
 class Property(object):
-	"""A property that can be QuickChecked.
-	"""
+	"""A property that can be QuickChecked."""
+
 	def __init__(self, args, kwargs, func):
 		"""Constructor. Callers should specify the function
 		which encodes the testing property, and arbitrary values'
@@ -126,12 +126,12 @@ def qc(first_arg=None, *args, **kwargs):
 	"""
 	# applying @qc on function whose default arguments
 	# specify generators of arbitrary values for those arguments
-	parameterless_applicaton = (
+	parameterless_application = (
 		inspect.isfunction(first_arg) and
-		not getattr(first_arg, '_arbitrary', False) and
+		not isarbitrary(first_arg) and
 		not (args or kwargs)
 	)
-	if parameterless_applicaton:
+	if parameterless_application:
 		func_args, _, _, func_defaults = inspect.getargspec(first_arg)
 		free_args_count = len(func_args) - len(func_defaults)
 		if free_args_count > 0:

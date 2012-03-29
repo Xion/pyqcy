@@ -43,6 +43,12 @@ def case_transform_preserves_length(s):
 	assert len(s) == len(s.lower())
 
 
+@qc
+def sort_finds_minimum(
+	l=list_(of=int_(), min_length=1, max_length=64)
+):
+	assert sorted(l)[0] == min(l)
+
 
 class Basic(unittest.TestCase):
 	"""Basic test cases.
@@ -52,6 +58,9 @@ class Basic(unittest.TestCase):
 
 	def test_standard_arbitrary_with_args(self):
 		addition_works_for_positive_floats.test()
+
+	def test_standard_nested_arbitrary(self):
+		sort_finds_minimum.test()
 
 	def test_custom_arbitrary(self):
 		case_transform_preserves_length.test()
@@ -63,7 +72,9 @@ class Basic(unittest.TestCase):
 		subtraction_doesnt_break.test()
 
 	def test_runner(self):
-		assert main() == 5
+		from pyqcy.properties import Property
+		assert main() == len([obj for obj in globals().itervalues()
+							  if isinstance(obj, Property)])
 
 
 if __name__ == '__main__':

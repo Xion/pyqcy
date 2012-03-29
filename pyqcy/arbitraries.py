@@ -2,14 +2,11 @@
 Generators of arbitrary values.
 """
 import functools
+import inspect
 import random
 import sys
 
 from .utils import optional_args
-
-
-__all__ = ['arbitrary',
-		   'int_', 'float_', 'complex_']
 
 
 @optional_args
@@ -71,6 +68,20 @@ class arbitrary(object):
 		return wrapper
 
 
+def isarbitrary(obj):
+	"""Checks whether given object is a generator of arbitrary values.
+	This functions handles all the forms in which arbitraries can occur
+	in the code, including: generators, generator functions, and types.
+	"""
+	if inspect.isgenerator(obj):
+		return True
+	if inspect.isgeneratorfunction(obj):
+		return getattr(obj, '_arbitrary', False)
+	if isinstance(obj, type):
+		return obj in arbitrary.registry
+	return False
+
+
 # Arbitrary values' generators for built-in types
 
 @arbitrary(int)
@@ -96,4 +107,12 @@ def str_(of=int_(min=0, max=255), min_length=1, max_length=64):
 	"""Default arbitrary values' generator for strings."""
 	length = random.randint(min_length, max_length)
 	return ''.join(chr(next(of)) for _ in xrange(length))
+	
+@arbitrary
+def list_(of, min_length=0, max_length=1024):
+	"""Generator for arbitrary lists. List elements themselves
+	can come from any arbitrary generator passed as first argument.
+	"""
+	length = random.randint(min_length, max_length)
+	return [next(of) for _ in xrange(length)]
 	
