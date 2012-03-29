@@ -18,17 +18,17 @@ has to satisfy. Based on that, _pyqcy_ will automatically generate test cases
 
 Try this:
 
-    #!python
-    from pyqcy import qc, main
+```python
+from pyqcy import qc, main
 
-    @qc
-    def addition_actually_works(x=int, y=int):
-    	the_sum = x + y
-    	assert sum >= x and sum >= y
+@qc
+def addition_actually_works(x=int, y=int):
+	the_sum = x + y
+	assert sum >= x and sum >= y
 
-    if __name__ == '__main__':
-    	main()
-
+if __name__ == '__main__':
+	main()
+```
 It will print:
 
     addition_actually_works: passed 100 tests.
