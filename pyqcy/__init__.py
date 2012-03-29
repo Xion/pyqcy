@@ -18,11 +18,15 @@ def main(module='__main__'):
 		for part in module_name.split('.')[1:]:
 			module = getattr(module, part)
 
-	from .properties import Property
+	from .properties import Property, DEFAULT_TEST_COUNT
 
 	props = [v for v in module.__dict__.itervalues()
 			 if isinstance(v, Property)]
 	for p in props:
 		p.test()
+		print "%s: passed %s test%s." % (p.func.__name__,
+			DEFAULT_TEST_COUNT,
+			"s" if DEFAULT_TEST_COUNT != 1 else "")
+		
 	return len(props)
 	
