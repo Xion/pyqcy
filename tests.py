@@ -45,7 +45,7 @@ def case_transform_preserves_length(s):
 
 @qc
 def sort_finds_minimum(
-	l=list_(of=int_(), min_length=1, max_length=64)
+	l=list_(of=int, min_length=1, max_length=64)
 ):
 	assert sorted(l)[0] == min(l)
 

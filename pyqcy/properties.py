@@ -5,7 +5,7 @@ Also known as "tests".
 import inspect
 import functools
 
-from .arbitraries import arbitrary, isarbitrary
+from .arbitraries import arbitrary, is_arbitrary, to_arbitrary
 
 
 __all__ = ['qc']
@@ -21,34 +21,10 @@ class Property(object):
 		which encodes the testing property, and arbitrary values'
 		generator for both positonal and keyword arguments.
 		"""
-		self.args = map(self.__coerce_to_arbitrary, args)
-		self.kwargs = dict((k, self.__coerce_to_arbitrary(v))
+		self.args = map(to_arbitrary, args)
+		self.kwargs = dict((k, to_arbitrary(v))
 						   for k, v in kwargs.iteritems())
 		self.func = self.__coerce_to_generator_func(func)
-
-	def __coerce_to_arbitrary(self, obj):
-		"""Ensures that given object is a generator of arbitrary values.
-		Rather than permitting only actual generators, this allows
-		us to pass generator functions or even types, provided
-		there is a know arbitrary generator for them.
-		"""
-		if inspect.isgenerator(obj):
-			return obj
-		if inspect.isgeneratorfunction(obj):
-			return obj()	# fails if arguments are required,
-							# and this is intended
-
-		# looking up types in global registry
-		if isinstance(obj, type):
-			arbit_gens = arbitrary.registry.get(obj)
-			if not arbit_gens:
-				raise TypeError(
-					"no arbitrary values' generator found for type: %s" % obj)
-			return self.__coerce_to_arbitrary(arbit_gens[0])
-
-		raise ValueError(
-			"invalid generator of arbitrary values: %r (of type %s)" % (
-				obj, type(obj).__name__))
 
 	def __coerce_to_generator_func(self, func):
 		"""Ensures that given function is a generator function,
@@ -128,7 +104,7 @@ def qc(first_arg=None, *args, **kwargs):
 	# specify generators of arbitrary values for those arguments
 	parameterless_application = (
 		inspect.isfunction(first_arg) and
-		not isarbitrary(first_arg) and
+		not is_arbitrary(first_arg) and
 		not (args or kwargs)
 	)
 	if parameterless_application:

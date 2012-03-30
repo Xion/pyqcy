@@ -36,7 +36,7 @@ class arbitrary(object):
 			self.registry.setdefault(self.type_, [])
 			self.registry[self.type_].append(gen_func)
 
-		gen_func._arbitrary = True
+		gen_func._arbitrary = True # marker attribute
 		return gen_func
 
 	def __normal_generator_function(self, func):
@@ -45,6 +45,8 @@ class arbitrary(object):
 		"""
 		@functools.wraps(func)
 		def wrapper(*args, **kwargs):
+			args = self.__coerce_args_to_arbitraries(args)
+			kwargs = self.__coerce_kwargs_to_arbitraries(kwargs)
 			while True:
 				yield func(*args, **kwargs)
 
@@ -57,6 +59,8 @@ class arbitrary(object):
 		"""
 		@functools.wraps(func)
 		def wrapper(*args, **kwargs):
+			args = self.__coerce_args_to_arbitraries(args)
+			kwargs = self.__coerce_kwargs_to_arbitraries(kwargs)
 			while True:
 				value = func(*args, **kwargs)
 				if not isinstance(value, self.type_):
@@ -67,9 +71,25 @@ class arbitrary(object):
 
 		return wrapper
 
+	def __coerce_args_to_arbitraries(self, args):
+		"""Ensures given list of arguments contains appropriate arbitrary
+		values' generators. Elements that cannot be reasonably coerced
+		into arbitraries are left unchanged.
+		"""
+		return [to_arbitrary(arg) if is_arbitrary(arg) else arg
+				for arg in args]
 
-def isarbitrary(obj):
-	"""Checks whether given object is a generator of arbitrary values.
+	def __coerce_kwargs_to_arbitraries(self, kwargs):
+		"""Ensures given dictionary of arguments contains appropriate arbitrary
+		values' generators. Elements that cannot be reasonably coerced
+		into arbitraries are left unchanged.
+		"""
+		return dict((k, to_arbitrary(v) if is_arbitrary(v) else v)
+					for (k, v) in kwargs.iteritems())
+
+
+def is_arbitrary(obj):
+	"""Checks whether given object can work as generator of arbitrary values.
 	This functions handles all the forms in which arbitraries can occur
 	in the code, including: generators, generator functions, and types.
 	"""
@@ -80,6 +100,30 @@ def isarbitrary(obj):
 	if isinstance(obj, type):
 		return obj in arbitrary.registry
 	return False
+
+def to_arbitrary(obj):
+	"""Ensures that given object is a generator of arbitrary values.
+	Rather than permitting only actual generators, this allows
+	us to pass generator functions or even types, provided
+	there is a know arbitrary generator for them.
+	"""
+	if inspect.isgenerator(obj):
+		return obj
+	if inspect.isgeneratorfunction(obj):
+		return obj()	# fails if arguments are required,
+						# and this is intended
+
+	# looking up types in global registry
+	if isinstance(obj, type):
+		arbit_gens = arbitrary.registry.get(obj)
+		if not arbit_gens:
+			raise TypeError(
+				"no arbitrary values' generator found for type: %s" % obj)
+		return to_arbitrary(arbit_gens[0])
+
+	raise ValueError(
+		"invalid generator of arbitrary values: %r (of type %s)" % (
+			obj, type(obj).__name__))
 
 
 # Arbitrary values' generators for built-in types
