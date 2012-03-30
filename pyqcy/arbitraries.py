@@ -126,7 +126,7 @@ def to_arbitrary(obj):
 			obj, type(obj).__name__))
 
 
-# Arbitrary values' generators for built-in types
+# Arbitrary values' generators for built-in scalar types
 
 @arbitrary(int)
 def int_(min=0, max=sys.maxint):
@@ -151,6 +151,16 @@ def str_(of=int_(min=0, max=255), min_length=1, max_length=64):
 	"""Default arbitrary values' generator for strings."""
 	length = random.randint(min_length, max_length)
 	return ''.join(chr(next(of)) for _ in xrange(length))
+
+# Arbitrary values' generators for built-in collection types
+
+@arbitrary
+def tuple_(*args):
+	"""Generator for arbitrary tuples. Resulting tuples are always
+	of same length, equal to number of arbitrary generators passed
+	to this function.
+	"""
+	return tuple(map(next, args))
 	
 @arbitrary
 def list_(of, min_length=0, max_length=1024):

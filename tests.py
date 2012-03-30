@@ -52,7 +52,7 @@ def sort_finds_minimum(
 @qc
 def dict_update_works(
 	d1=dict_(keys=str, values=str, min_length=1, max_length=64),
-	d2=dict_(keys=int, values=str, min_length=1, max_length=64)
+	d2=dict_(items=tuple_(int, str), min_length=1, max_length=64)
 ):
 	d1_len = len(d1)
 	d1.update(d2)
