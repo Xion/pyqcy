@@ -49,6 +49,15 @@ def sort_finds_minimum(
 ):
 	assert sorted(l)[0] == min(l)
 
+@qc
+def dict_update_works(
+	d1=dict_(keys=str, values=str, min_length=1, max_length=64),
+	d2=dict_(keys=int, values=str, min_length=1, max_length=64)
+):
+	d1_len = len(d1)
+	d1.update(d2)
+	assert len(d1) == d1_len + len(d2)
+
 
 class Basic(unittest.TestCase):
 	"""Basic test cases.
@@ -61,6 +70,9 @@ class Basic(unittest.TestCase):
 
 	def test_standard_nested_arbitrary(self):
 		sort_finds_minimum.test()
+
+	def test_dict_arbitrary(self):
+		dict_update_works.test()
 
 	def test_custom_arbitrary(self):
 		case_transform_preserves_length.test()

@@ -160,3 +160,16 @@ def list_(of, min_length=0, max_length=1024):
 	length = random.randint(min_length, max_length)
 	return [next(of) for _ in xrange(length)]
 	
+@arbitrary
+def dict_(keys=None, values=None, items=None,
+		  min_length=0, max_length=1024):
+	"""Generator for arbitrary dictionaries. Either `keys` and `values`,
+	or the `items` argument must be provided - but not both.
+	"""
+	if not ((keys and values) or items):
+		raise ValueError("invalid dictionary items' generators provided")
+
+	next_item = ((lambda: next(items)) if items else
+				 (lambda: (next(keys), next(values))))
+	length = random.randint(min_length, max_length)
+	return dict(next_item() for _ in xrange(length))
