@@ -29,81 +29,56 @@ class arbitrary(object):
 		for easy reference.
 		"""
 		if self.type_ is None:
-			gen_func = self.__normal_arbitrary(func)
+			gen_func = self.__arbitrary_generator(func)
 		else:
-			gen_func =  self.__validating_arbitrary(func)
+			def validate(value):
+				if not isinstance(value, self.type_):
+					raise TypeError(
+						"arbitrary value %r is of type %s; expected %s" % (
+							value, type(value).__name__, self.type_.__name__))
+				return value
 
+			gen_func =  self.__arbitrary_generator(func, validate)
 			self.registry.setdefault(self.type_, [])
 			self.registry[self.type_].append(gen_func)
 
 		gen_func._arbitrary = True # marker attribute
 		return gen_func
 
-	def __normal_arbitrary(self, func):
-		"""Returns a version of arbitrary generator function
-		that does not validate output value.
+	def __arbitrary_generator(self, func, value_func=None):
+		"""Constructs arbitrary generator based on given function `func`.
+		It can be both a function that returns a single value,
+		or a generator function.
 		"""
-		if inspect.isgeneratorfunction(func):
-			@functools.wraps(func)
-			def wrapper(*args, **kwargs):
-				args = self.__coerce_args_to_arbitraries(args)
-				kwargs = self.__coerce_kwargs_to_arbitraries(kwargs)
-				for obj in func(*args, **kwargs):
-					yield obj
-		else:
-			@functools.wraps(func)
-			def wrapper(*args, **kwargs):
-				args = self.__coerce_args_to_arbitraries(args)
-				kwargs = self.__coerce_kwargs_to_arbitraries(kwargs)
-				while True:
-					yield func(*args, **kwargs)
-
-		return wrapper
-
-	def __validating_arbitrary(self, func):
-		"""Returns a version of arbitrary generator function
-		that validates output value against type given
-		as @arbitrary parameter.
-		"""
-		def validate(value):
-			if not isinstance(value, self.type_):
-				raise TypeError(
-					"arbitrary value %r is of type %s; expected %s" % (
-						value, type(value).__name__, self.type_.__name__))
-			return value
+		if value_func is None:
+			value_func = lambda v: v # identity function
 
 		if inspect.isgeneratorfunction(func):
 			@functools.wraps(func)
 			def wrapper(*args, **kwargs):
-				args = self.__coerce_args_to_arbitraries(args)
-				kwargs = self.__coerce_kwargs_to_arbitraries(kwargs)
+				args, kwargs = self.__coerce_to_arbitraries(args, kwargs)
 				for obj in func(*args, **kwargs):
-					yield validate(obj)
+					yield value_func(obj)
 		else:
 			@functools.wraps(func)
 			def wrapper(*args, **kwargs):
-				args = self.__coerce_args_to_arbitraries(args)
-				kwargs = self.__coerce_kwargs_to_arbitraries(kwargs)
+				args, kwargs = self.__coerce_to_arbitraries(args, kwargs)
 				while True:
-					yield validate(func(*args, **kwargs))
+					yield value_func(func(*args, **kwargs))
 
 		return wrapper
 
-	def __coerce_args_to_arbitraries(self, args):
-		"""Ensures given list of arguments contains appropriate arbitrary
-		values' generators. Elements that cannot be reasonably coerced
-		into arbitraries are left unchanged.
+	def __coerce_to_arbitraries(self, args=[], kwargs={}):
+		"""Ensures given list and dictionary of positional and keyword
+		arguments contains appropriate arbitrary values' generators.
+		Elements that cannot be reasonably coerced into arbitraries
+		are left unchanged.
 		"""
-		return [to_arbitrary(arg) if is_arbitrary(arg) else arg
+		args = [to_arbitrary(arg) if is_arbitrary(arg) else arg
 				for arg in args]
-
-	def __coerce_kwargs_to_arbitraries(self, kwargs):
-		"""Ensures given dictionary of arguments contains appropriate arbitrary
-		values' generators. Elements that cannot be reasonably coerced
-		into arbitraries are left unchanged.
-		"""
-		return dict((k, to_arbitrary(v) if is_arbitrary(v) else v)
-					for (k, v) in kwargs.iteritems())
+		kwargs = dict((k, to_arbitrary(v) if is_arbitrary(v) else v)
+					  for (k, v) in kwargs.iteritems())
+		return args, kwargs
 
 
 def is_arbitrary(obj):
