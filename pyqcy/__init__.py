@@ -1,16 +1,21 @@
 """
 pyqcy :: QuickCheck-like testing framework for Python
 """
+import sys
+import traceback
+import os
+
 from .arbitraries import *
 from .properties import *
 
 
-def main(module='__main__'):
+def main(module='__main__', exit=True, failfast=False):
 	"""Test runner. When called, it will look for all properties
 	(i.e. functions with @qc decorator) and push them through
 	a default number of checks.
 	Arguments are intended to mimic those from unittest.main().
-	Return value is the total number of properties checked.
+	Return value is the total number of properties checked
+	(provided the exit=False and program doesn't terminate).
 	"""
 	if isinstance(module, basestring):
 		module_name = module
@@ -19,14 +24,26 @@ def main(module='__main__'):
 			module = getattr(module, part)
 
 	from .properties import Property, DEFAULT_TEST_COUNT
-
 	props = [v for v in module.__dict__.itervalues()
 			 if isinstance(v, Property)]
+
+	# run the tests
+	failed = False
 	for p in props:
-		p.test()
-		print "%s: passed %s test%s." % (p.func.__name__,
-			DEFAULT_TEST_COUNT,
-			"s" if DEFAULT_TEST_COUNT != 1 else "")
+		try:
+			p.test()
+		except:
+			print "%s: failed." % p.func.__name__
+			traceback.print_exception(*sys.exc_info())
+			failed = True
+			if failfast:
+				break
+		else:	
+			print "%s: passed %s test%s." % (p.func.__name__,
+				DEFAULT_TEST_COUNT,
+				"s" if DEFAULT_TEST_COUNT != 1 else "")
 		
+	if exit:
+		sys.exit(1 if failed else 0)
 	return len(props)
 	

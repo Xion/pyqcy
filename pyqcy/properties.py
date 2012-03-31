@@ -109,6 +109,7 @@ def qc(first_arg=None, *args, **kwargs):
 	)
 	if parameterless_application:
 		func_args, _, _, func_defaults = inspect.getargspec(first_arg)
+		func_args, func_defaults = func_args or [], func_defaults or []
 		free_args_count = len(func_args) - len(func_defaults)
 		if free_args_count > 0:
 			raise TypeError("property has unbound variables: %s" %

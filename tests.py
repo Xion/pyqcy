@@ -70,6 +70,11 @@ def dict_update_works(
 	assert len(d1) == d1_len + len(d2)
 
 
+@qc
+def failing():
+	assert False
+
+
 class Basic(unittest.TestCase):
 	"""Basic test cases.
 	"""
@@ -97,10 +102,14 @@ class Basic(unittest.TestCase):
 	def test_arbitraries_in_default_args(self):
 		subtraction_doesnt_break.test()
 
+	def test_failing_property(self):
+		self.assertRaises(AssertionError, failing.test)
+
 	def test_runner(self):
 		from pyqcy.properties import Property
-		assert main() == len([obj for obj in globals().itervalues()
-							  if isinstance(obj, Property)])
+		assert main(exit=False) == len([obj for obj in globals().itervalues()
+							  			if isinstance(obj, Property)])
+
 
 
 if __name__ == '__main__':
