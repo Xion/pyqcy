@@ -18,6 +18,11 @@ def str_with_len_lt5():
 def two_digit_integers():
 	return random.randint(10, 99)
 
+@arbitrary(float)
+def random_floats():
+	while True:
+		yield random.random()
+
 
 
 @qc(int, int)
@@ -44,6 +49,12 @@ def case_transform_preserves_length(s):
 
 
 @qc
+def multiplication_on_floats(
+	a=random_floats, b=random_floats
+):
+	assert a * b <= 1.0
+
+@qc
 def sort_finds_minimum(
 	l=list_(of=int, min_length=1, max_length=64)
 ):
@@ -64,6 +75,9 @@ class Basic(unittest.TestCase):
 	"""
 	def test_standard_arbitrary(self):
 		addition_doesnt_break.test()
+
+	def test_generator_arbitrary(self):
+		multiplication_on_floats.test()
 
 	def test_standard_arbitrary_with_args(self):
 		addition_works_for_positive_floats.test()

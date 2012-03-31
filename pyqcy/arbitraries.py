@@ -29,9 +29,9 @@ class arbitrary(object):
 		for easy reference.
 		"""
 		if self.type_ is None:
-			gen_func = self.__normal_generator_function(func)
+			gen_func = self.__normal_arbitrary(func)
 		else:
-			gen_func =  self.__validating_generator_function(func)
+			gen_func =  self.__validating_arbitrary(func)
 
 			self.registry.setdefault(self.type_, [])
 			self.registry[self.type_].append(gen_func)
@@ -39,35 +39,53 @@ class arbitrary(object):
 		gen_func._arbitrary = True # marker attribute
 		return gen_func
 
-	def __normal_generator_function(self, func):
+	def __normal_arbitrary(self, func):
 		"""Returns a version of arbitrary generator function
 		that does not validate output value.
 		"""
-		@functools.wraps(func)
-		def wrapper(*args, **kwargs):
-			args = self.__coerce_args_to_arbitraries(args)
-			kwargs = self.__coerce_kwargs_to_arbitraries(kwargs)
-			while True:
-				yield func(*args, **kwargs)
+		if inspect.isgeneratorfunction(func):
+			@functools.wraps(func)
+			def wrapper(*args, **kwargs):
+				args = self.__coerce_args_to_arbitraries(args)
+				kwargs = self.__coerce_kwargs_to_arbitraries(kwargs)
+				for obj in func(*args, **kwargs):
+					yield obj
+		else:
+			@functools.wraps(func)
+			def wrapper(*args, **kwargs):
+				args = self.__coerce_args_to_arbitraries(args)
+				kwargs = self.__coerce_kwargs_to_arbitraries(kwargs)
+				while True:
+					yield func(*args, **kwargs)
 
 		return wrapper
 
-	def __validating_generator_function(self, func):
+	def __validating_arbitrary(self, func):
 		"""Returns a version of arbitrary generator function
 		that validates output value against type given
 		as @arbitrary parameter.
 		"""
-		@functools.wraps(func)
-		def wrapper(*args, **kwargs):
-			args = self.__coerce_args_to_arbitraries(args)
-			kwargs = self.__coerce_kwargs_to_arbitraries(kwargs)
-			while True:
-				value = func(*args, **kwargs)
-				if not isinstance(value, self.type_):
-					raise TypeError(
-						"arbitrary value %r is of type %s; expected %s" % (
-							value, type(value).__name__, self.type_.__name__))
-				yield value
+		def validate(value):
+			if not isinstance(value, self.type_):
+				raise TypeError(
+					"arbitrary value %r is of type %s; expected %s" % (
+						value, type(value).__name__, self.type_.__name__))
+			return value
+
+		if inspect.isgeneratorfunction(func):
+			@functools.wraps(func)
+			def wrapper(*args, **kwargs):
+				args = self.__coerce_args_to_arbitraries(args)
+				kwargs = self.__coerce_kwargs_to_arbitraries(kwargs)
+				for obj in func(*args, **kwargs):
+					yield validate(obj)
+		else:
+			@functools.wraps(func)
+			def wrapper(*args, **kwargs):
+				args = self.__coerce_args_to_arbitraries(args)
+				kwargs = self.__coerce_kwargs_to_arbitraries(kwargs)
+				while True:
+					yield validate(func(*args, **kwargs))
 
 		return wrapper
 
