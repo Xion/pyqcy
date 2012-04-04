@@ -74,6 +74,10 @@ def dict_update_works(
 def failing():
 	assert False
 
+@qc
+def adding_to(x=0, y=int_(min=0, max=10)):
+	assert x + y >= x
+
 
 class Basic(unittest.TestCase):
 	"""Basic test cases.
@@ -104,6 +108,9 @@ class Basic(unittest.TestCase):
 
 	def test_failing_property(self):
 		self.assertRaises(AssertionError, failing.test)
+
+	def test_parametrized_property(self):
+		assert adding_to(5).test()
 
 	def test_runner(self):
 		from pyqcy.properties import Property

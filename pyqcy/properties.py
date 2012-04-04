@@ -21,8 +21,9 @@ class Property(object):
 		which encodes the testing property, and arbitrary values'
 		generator for both positonal and keyword arguments.
 		"""
-		self.args = map(to_arbitrary, args)
-		self.kwargs = dict((k, to_arbitrary(v))
+		self.args = [to_arbitrary(arg) if is_arbitrary(arg) else arg
+					 for arg in args]
+		self.kwargs = dict((k, to_arbitrary(v) if is_arbitrary else v)
 						   for k, v in kwargs.iteritems())
 		self.func = self.__coerce_to_generator_func(func)
 
@@ -46,29 +47,28 @@ class Property(object):
 		args = self.__arbitrary_args()
 		kwargs = self.__arbitrary_kwargs()
 		coroutine = self.func(*args, **kwargs)
-		self.__execute_test(coroutine)
+		return self.__execute_test(coroutine)
 
 	def test(self, count=DEFAULT_TEST_COUNT):
 		"""Executes given number of tests for this property
 		and gathers statistics about all test runs.
 		"""
 		# no statistics yet
-		for _ in xrange(count):
-			self.test_one()
-
-	__call__ = test
+		return all(self.test_one() for _ in xrange(count))
 
 	def __arbitrary_args(self):
 		"""Returns a list of arbitrary values for
 		positional arguments of the property function.
 		"""
-		return map(next, self.args)
+		return [next(arg) if is_arbitrary(arg) else arg
+				for arg in self.args]
 
 	def __arbitrary_kwargs(self):
 		"""Returns a dictionary of arbitrary values
 		for keyword arguments of the property function.
 		"""
-		return dict((k, next(v)) for k, v in self.kwargs.iteritems())
+		return dict((k, next(v) if is_arbitrary(v) else v)
+					for k, v in self.kwargs.iteritems())
 
 	def __execute_test(self, coroutine):
 		"""Executes given test coroutine and returns results,
@@ -79,7 +79,34 @@ class Property(object):
 			while True:
 				next(coroutine)
 		except StopIteration:
-			pass
+			return True
+
+	@property
+	def parametrized(self):
+		'''Checks whether the property is parametrized, i.e. has
+		some arguments which are not generators of arbitrary values.
+		'''
+		args_are_arbitrary = all(map(is_arbitrary, self.args))
+		kwargs_are_arbitrary = all(map(is_arbitrary, self.kwargs.itervalues()))
+		return not (args_are_arbitrary and kwargs_are_arbitrary)
+
+	def __call__(self, *args, **kwargs):
+		"""Calling the property object will create new one
+		with some of the arguments bound to given values.
+		In other words, it will perform currying on property's
+		function.
+		"""
+		@functools.wraps(self.func)
+		def curried_func(*args_, **kwargs_):
+			final_args = list(args) + list(args_ or [])
+			final_kwargs = kwargs.copy()
+			final_kwargs.update(kwargs_)
+			return self.func(*final_args, **final_kwargs)
+
+		curried_args = self.args[len(args):]
+		curried_kwargs = dict((k, v) for (k, v) in self.kwargs.iteritems()
+							   if k not in kwargs)
+		return Property(curried_args, curried_kwargs, curried_func)
 
 
 # The @qc decorator

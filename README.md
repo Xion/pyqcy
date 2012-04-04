@@ -45,7 +45,7 @@ See _tests.py_ for more usage examples.
 
 ## How far does it go?
 
-Although quite functional (pun likely intended), this project is in experimental phase.
+Although quite functional (pun likely intended), the project is in experimental phase.
 The aim is to make very similar to Haskell's _QuickCheck_, in extent
 permitted by the dynamic nature of Python.
 

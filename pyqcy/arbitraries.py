@@ -98,7 +98,7 @@ def to_arbitrary(obj):
 	"""Ensures that given object is a generator of arbitrary values.
 	Rather than permitting only actual generators, this allows
 	us to pass generator functions or even types, provided
-	there is a know arbitrary generator for them.
+	there is a known arbitrary generator for them.
 	"""
 	if inspect.isgenerator(obj):
 		return obj
