@@ -5,10 +5,10 @@ _QuickCheck_-like testing framework for Python
 ## What, another testing utility?
 
 It's true that Python has plethora of testing tools, especially when it comes to
-[unit tests](http://packages.python.org/testing/#unit-testing-tools). Why would
-anyone want another library dedicated to that?...
+[unit tests](http://packages.python.org/testing/#unit-testing-tools). So why would
+anyone want another library dedicated to this end?...
 
-For one, _pyqcy_ (\[pyksi:\]) supports a unique testing model, based on the
+For one, _pyqcy_ \[pyksi:\] supports a unique testing model, inspired by the
 brilliant _QuickCheck_ library for Haskell. Rather than writing fully-fledged
 test cases, you only need to define logical **properties** that your code
 has to satisfy. Based on that, _pyqcy_ will automatically generate test cases
@@ -46,7 +46,7 @@ See _tests.py_ for more usage examples.
 ## How far does it go?
 
 Although quite functional (pun likely intended), the project is in experimental phase.
-The aim is to make very similar to Haskell's _QuickCheck_, in extent
+The aim is to make it very similar to Haskell's _QuickCheck_, in extent
 permitted by the dynamic nature of Python.
 
-Ideas, suggestions and contributions are very welcome.
+Ideas, suggestions and contributions are all very welcome.
