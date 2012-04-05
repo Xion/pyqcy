@@ -36,7 +36,7 @@ It will print:
     addition_actually_works: passed 100 tests.
 
 That's one hundred test cases generated automatically. In this example
-with <code>int</code> sit is of course very simple, but _pyqcy_ already
+with <code>int</code>s it is of course very simple, but _pyqcy_ already
 has support for most Python types, including strings and lists.
 Futhermore it also allows you to define your own generators
 using the <code>@arbitrary</code> decorator.
