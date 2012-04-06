@@ -148,12 +148,26 @@ def str_(of=int_(min=0, max=255), min_length=1, max_length=64):
 # Arbitrary values' generators for built-in collection types
 
 @arbitrary
-def tuple_(*args):
+def tuple_(*args, **kwargs):
 	"""Generator for arbitrary tuples. Resulting tuples are always
 	of same length, equal to number of arbitrary generators passed
-	to this function.
+	to this function or the value of `n` keyword argument.
 	"""
-	return tuple(map(next, args))
+	n = kwargs.get('n')
+	if n is None:
+		return tuple(map(next, args))
+
+	of = kwargs.get('of')
+	if of:
+		if args:
+			raise TypeError("ambiguous invocation - "
+							"more than one possible type for tuple elements")
+	else:
+		if len(args) != 1:
+			raise TypeError("no/invalid type of arbitrary tuple elements")
+		of = args[0]
+
+	return tuple(next(of) for _ in xrange(n))
 	
 @arbitrary
 def list_(of, min_length=0, max_length=1024):

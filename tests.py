@@ -69,6 +69,14 @@ def dict_update_works(
 	d1.update(d2)
 	assert len(d1) == d1_len + len(d2)
 
+@qc
+def tuples_survive_listification(
+	t=tuple_(int, n=10)
+):
+	as_list = list(t)
+	back_as_tuple = tuple(as_list)
+	assert all((old, new) for (old, new) in zip(t, back_as_tuple))
+
 
 @qc
 def failing():
@@ -93,6 +101,9 @@ class Basic(unittest.TestCase):
 
 	def test_standard_nested_arbitrary(self):
 		sort_finds_minimum.test()
+
+	def test_tuple_arbitrary(self):
+		tuples_survive_listification.test()
 
 	def test_dict_arbitrary(self):
 		dict_update_works.test()
