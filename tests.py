@@ -77,6 +77,12 @@ def tuples_survive_listification(
 	back_as_tuple = tuple(as_list)
 	assert all((old, new) for (old, new) in zip(t, back_as_tuple))
 
+@qc
+def two_is_two(
+	t=two(int)
+):
+	assert len(t) == 2
+
 
 @qc
 def failing():
@@ -104,6 +110,9 @@ class Basic(unittest.TestCase):
 
 	def test_tuple_arbitrary(self):
 		tuples_survive_listification.test()
+
+	def test_shorthand_tuple_arbitrary(self):
+		two_is_two.test()
 
 	def test_dict_arbitrary(self):
 		dict_update_works.test()

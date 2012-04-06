@@ -168,6 +168,10 @@ def tuple_(*args, **kwargs):
 		of = args[0]
 
 	return tuple(next(of) for _ in xrange(n))
+
+two = functools.partial(tuple_, n=2)
+three = functools.partial(tuple_, n=3)
+four = functools.partial(tuple_, n=4)
 	
 @arbitrary
 def list_(of, min_length=0, max_length=1024):
