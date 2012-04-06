@@ -85,6 +85,26 @@ def two_is_two(
 
 
 @qc
+def set_of_elements(
+	x=elements("abc")
+):
+	assert len(x) == 1
+	assert x in "abc"
+
+@qc
+def one_of_works(
+	x=one_of(float, int)
+):
+	assert isinstance(x, (float, int))
+
+@qc
+def frequency_works(
+	x=frequency([(1, float), (2, int)])
+):
+	assert isinstance(x, (float, int))
+
+
+@qc
 def failing():
 	assert False
 
@@ -116,6 +136,15 @@ class Basic(unittest.TestCase):
 
 	def test_dict_arbitrary(self):
 		dict_update_works.test()
+
+	def test_elements_arbitrary(self):
+		set_of_elements.test()
+
+	def test_one_of_arbitrary(self):
+		one_of_works.test()
+
+	def test_frequency_arbitrary(self):
+		frequency_works.test()
 
 	def test_custom_arbitrary(self):
 		case_transform_preserves_length.test()
