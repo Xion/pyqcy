@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 
 setup(
 	name="pyqcy",
-	version="0.1",
+	version="0.1.1",
 	description="QuickCheck-like testing framework for Python",
 	author='Karol Kuczmarski "Xion"',
 	author_email="karol.kuczmarski@gmail.com",

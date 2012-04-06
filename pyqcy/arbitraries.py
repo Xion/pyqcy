@@ -231,7 +231,6 @@ def combinator(func):
 
 	return wrapped
 
-@arbitrary
 @combinator
 def elements(*args):
 	"""Creates a generator that returns a random element from those given.
@@ -241,7 +240,6 @@ def elements(*args):
 		raise ValueError("cannot pick random element from empty sequence")
 	return random.choice(args)
 
-@arbitrary
 @combinator
 def one_of(*args):
 	"""Creates a generator that chooses among given generators, giving
@@ -251,7 +249,6 @@ def one_of(*args):
 		raise ValueError("no generators to choose from")
 	return next(random.choice(args))
 
-@arbitrary
 @combinator
 def frequency(*args):
 	"""Creates a generator that chooses among given generators, according
