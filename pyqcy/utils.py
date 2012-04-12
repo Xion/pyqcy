@@ -1,10 +1,32 @@
 """
 Utility module.
 """
+import itertools
 import functools
 import inspect
 import collections
 
+
+def partition(pred, iterable):
+    """Divides elements of given iterable in two,
+    based on whether they satisfy given predicate.
+    Returns tuple: (elems_that_satisfy, elems_that_dont_satisfy).
+    """
+    pred = pred or bool
+    true_elems = itertools.ifilter(pred, iterable)
+    false_elems = itertools.ifilterfalse(pred, iterable)
+
+    # preserve string-ness, list-ness or tuple-ness of results,
+    # in a manner similar to filter() or map()
+    res = (true_elems, false_elems)
+    for cls in (str, unicode, tuple, list):
+        if isinstance(iterable, cls):
+            res = map(cls, res)
+            break
+    return res
+
+
+# Decorators
 
 def optional_args(decor):
     """Decorator for decorators (sic) that are intended to take
@@ -24,7 +46,6 @@ def optional_args(decor):
             return decor(*args, **kwargs)
 
     return wrapped
-
 
 def recursive(func):
     ''' Constructs a function that which recursively applies given callable
