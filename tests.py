@@ -113,21 +113,6 @@ def adding_to(x=0, y=int_(min=0, max=10)):
     assert x + y >= x
 
 
-@qc
-def sorting_short_lists(
-    l=list_(float, min_length=1, max_length=6)
-):
-    yield collect(len(l))
-    assert list(sorted(l))[-1] == max(l)
-
-@qc
-def sort_preserves_length(l=list_(int, max_length=64)):
-    yield classify(len(l) == 0, "empty list")
-    yield classify(len(l) % 2 == 0, "even list")
-    yield classify(len(l) % 2 != 0, "odd list")
-    assert len(list(sorted(l))) == len(l)
-
-
 
 class Basic(unittest.TestCase):
     """Basic test cases.
@@ -177,6 +162,29 @@ class Basic(unittest.TestCase):
     def test_parametrized_property(self):
         assert adding_to(5).test()
 
+    def test_runner(self):
+        from pyqcy.properties import Property
+        assert main(exit=False) == len([obj for obj in globals().itervalues()
+                                        if isinstance(obj, Property)])
+
+
+class Statistics(unittest.TestCase):
+    """Test cases for statistics functionality."""
+
+    @qc
+    def sorting_short_lists(
+        l=list_(float, min_length=1, max_length=6)
+    ):
+        yield collect(len(l))
+        assert list(sorted(l))[-1] == max(l)
+
+    @qc
+    def sort_preserves_length(l=list_(int, max_length=64)):
+        yield classify(len(l) == 0, "empty list")
+        yield classify(len(l) % 2 == 0, "even list")
+        yield classify(len(l) % 2 != 0, "odd list")
+        assert len(list(sorted(l))) == len(l)
+
     def test_collect(self):
         results = sorting_short_lists.test()
         assert all(len(r) > 0 for r in results)
@@ -184,11 +192,6 @@ class Basic(unittest.TestCase):
     def test_classify(self):
         results = sort_preserves_length.test()
         assert any(len(r) > 0 for r in results)
-
-    def test_runner(self):
-        from pyqcy.properties import Property
-        assert main(exit=False) == len([obj for obj in globals().itervalues()
-                                        if isinstance(obj, Property)])
 
 
 

@@ -84,4 +84,5 @@ setup(
 
     platforms='any',
 	packages=find_packages(),
+    tests_require = ['nose'],
 )
