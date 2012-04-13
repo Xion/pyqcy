@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>pyqcy by Xion</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/Xion/pyqcy">Fork On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/Xion/pyqcy/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/Xion/pyqcy/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>pyqcy</h1>
+          <p>QuickCheck-like testing framework for Python</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/Xion">Xion</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>pyqcy</h1>
+
+<p><em>pyqcy</em> [pyksi:] is a test framework that supports unique testing model, inspired by the
+brilliant <em>QuickCheck</em> library for Haskell. Rather than writing fully-fledged test cases,
+you only need to define logical <strong>properties</strong> that your code has to satisfy.
+Based on that, <em>pyqcy</em> will automatically generate test cases - hundreds of them, in fact!</p>
+
+<h2>Example</h2>
+
+<div class="highlight">
+<pre><span class="kn">from</span> <span class="nn">pyqcy</span> <span class="kn">import</span> <span class="n">qc</span><span class="p">,</span> <span class="n">int_</span> <span class="n">main</span>
+
+<span class="nd">@qc</span>
+<span class="k">def</span> <span class="nf">addition_actually_works</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">int_</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">y</span><span class="o">=</span><span class="n">int_</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">):</span>
+    <span class="n">the_sum</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+    <span class="k">assert</span> <span class="n">the_sum</span> <span class="o">&gt;=</span> <span class="n">x</span> <span class="ow">and</span> <span class="n">the_sum</span> <span class="o">&gt;=</span> <span class="n">y</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre>
+</div>
+
+
+<pre><code>$ python ./example.py
+addition_actually_works: passed 100 tests.
+</code></pre>
+
+<p>Yes, that's 100 distinct test cases. <em>pyqcy</em> has generated them all for you!</p>
+
+<h2>Installation</h2>
+
+<p>Either from PyPI:</p>
+
+<pre><code>$ pip install pyqcy
+</code></pre>
+
+<p>or directly from GitHub if you want the bleeding edge version:</p>
+
+<pre><code>$ git clone git://github.com/Xion/pyqcy.git
+$ cd pyqcy
+$ ./setup.py develop
+</code></pre>
+
+<h2>Usage</h2>
+
+<p>Testing with <em>pyqcy</em> is mainly about writing <strong>properties</strong> which we expect for our code to hold.
+They take the form of a Python function decorated with <code>@qc</code>:</p>
+
+<div class="highlight">
+<pre><span class="kn">from</span> <span class="nn">pyqcy</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="nd">@qc</span>
+<span class="k">def</span> <span class="nf">sorting_preserves_length</span><span class="p">(</span>
+    <span class="n">l</span><span class="o">=</span><span class="n">list_</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+<span class="p">):</span>
+    <span class="n">before_sort</span> <span class="o">=</span> <span class="n">l</span>
+    <span class="n">after_sort</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">before_set</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">after_sort</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>Inside such function, parameters work like quantified variables. We can use the default arguments' syntax
+to constrain the set of values for those variables. So here we define <code>l</code>
+as <strong>arbitrary</strong>, non-empty <code>list</code> of <code>int</code>s with maximum length of 128 items.
+For every test for this property, <em>pyqcy</em> will automatically generate appropriate list and see
+whether our assertions hold ground.</p>
+
+<h3>Value generators</h3>
+
+<p>Support for all standard Python types - including lists (<code>list<em></em></code>), tuples (<code>dict</code>)
+and dictionaries (<code>dict_</code>) - is readily available.
+If we want to test against instances of custom type, we have to say how to construct an arbitrary
+(i.e. random) instance of this type:</p>
+
+<div class="highlight">
+<pre><span class="kn">from</span> <span class="nn">pyqcy</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="nd">@arbitrary</span><span class="p">(</span><span class="n">OurOwnClass</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">our_own</span><span class="p">():</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">OurOwnClass</span><span class="p">()</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">some_string</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">str_</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">32</span><span class="p">))</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">some_float</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">float_</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">obj</span>
+</pre>
+</div>
+
+
+<p>Once this is done, we can use the new generator to define properties regarding our class:</p>
+
+<div class="highlight">
+<pre><span class="nd">@qc</span>
+<span class="k">def</span> <span class="nf">forbs_correctly</span><span class="p">(</span><span class="n">obj</span><span class="o">=</span><span class="n">OurOwnClass</span><span class="p">):</span> <span class="c"># obj=our_own works too</span>
+    <span class="k">assert</span> <span class="n">obj</span><span class="o">.</span><span class="n">forb</span><span class="p">()</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">some_string</span><span class="p">)</span> <span class="o">+</span> <span class="mi">42</span>
+</pre>
+</div>
+
+
+<h3>Statistics</h3>
+
+<p>The test cases for our properties are generated at random. Because of that, it could be useful
+to have a little more insight on what part of problem's domain they actually cover. <em>pyqcy</em>
+has some statistical tools that help to obtain this information.</p>
+
+<p>First one is the <code>collect</code> function. As the name implies, it <strong>collects</strong> test
+cases that share particular value (given as argument). At the end, a "histogram" of those
+values is displayed, showing how often they occurred:</p>
+
+<div class="highlight">
+<pre><span class="kn">from</span> <span class="nn">pyqcy</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="nd">@qc</span>
+<span class="k">def</span> <span class="nf">sorting_short_lists</span><span class="p">(</span>
+    <span class="n">l</span><span class="o">=</span><span class="n">list_</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="p">):</span>
+    <span class="k">yield</span> <span class="n">collect</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">l</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<pre><code>sorting_short_lists: passed 100 tests.
+20.00%: 1
+20.00%: 2
+20.00%: 3
+20.00%: 4
+20.00%: 5
+</code></pre>
+
+<p>For more complicated (or coarse) clustering, there is also the <code>classify</code> function.
+Passed a boolean condition and a label, it will "stamp" a particular test case with given label
+if the condition is true:</p>
+
+<div class="highlight">
+<pre><span class="kn">from</span> <span class="nn">pyqcy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="nd">@qc</span>
+<span class="k">def</span> <span class="nf">sorting_works</span><span class="p">(</span><span class="n">l</span><span class="o">=</span><span class="n">list_</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">99</span><span class="p">)):</span>
+    <span class="k">yield</span> <span class="n">classify</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s">"empty list"</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="n">classify</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span> <span class="s">"short list"</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="n">classify</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">50</span><span class="p">,</span> <span class="s">"long list"</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+</pre>
+</div>
+
+
+<pre><code>sorting_works: passed 100 tests.
+ 1.00%: empty list, short list
+10.00%: short list
+50.00%: long list
+40.00%: &lt;rest&gt;
+</code></pre>
+
+<p>Note that in current version of <em>pyqcy</em>, it is <strong>essential</strong> to <code>yield</code> any statistical
+information (such as <code>collect</code> and <code>classify</code> calls) so it can be picked up
+by the test harness.</p>
+
+<h2>Going further</h2>
+
+<p>Although already usable, <em>pyqcy</em> is still in development phase.
+The aim is to have it mimic the Haskell's <em>QuickCheck</em> very closely while remaining
+pythonic and taking advantage of dynamic nature of the language.</p>
+
+<p>Thoughts, opinions, ideas and contributions are all very welcome! Head over to
+<a href="http://github.com/Xion/pyqcy">GitHub</a> for more info.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-30641076-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
