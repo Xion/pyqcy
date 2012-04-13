@@ -6,6 +6,7 @@ import inspect
 import functools
 
 from .arbitraries import arbitrary, is_arbitrary, to_arbitrary
+from .statistics import Tag
 
 
 __all__ = ['qc']
@@ -83,7 +84,8 @@ class Property(object):
             while True:
                 obj = next(coroutine)
                 if obj is not None:
-                    res.append(obj)
+                    value = obj.value if isinstance(obj, Tag) else obj
+                    res.append(value)
         except StopIteration:
             return frozenset(res)
 
