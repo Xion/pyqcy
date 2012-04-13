@@ -35,7 +35,7 @@ For starters, try this:
         main()
 
 ::
-    
+
     $ pip install pyqcy
     $ python test.py
     addition_actually_works: passed 100 tests.
@@ -75,7 +75,7 @@ setup(
 	license="BSD",
 
 	classifiers = [
-		"Development Status :: 2 - Pre-Alpha",
+		"Development Status :: 3 - Alpha",
 		"Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
 		"Operating System :: OS Independent",
