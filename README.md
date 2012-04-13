@@ -16,7 +16,11 @@ has to satisfy. Based on that, _pyqcy_ will automatically generate test cases
 
 ## So, how does it look like?
 
-Try this:
+Install _pyqcy_:
+
+    $ pip install pyqcy
+
+and then try this:
 
 ```python
 from pyqcy import qc, int_ main
@@ -33,6 +37,7 @@ if __name__ == '__main__':
 ```
 It will print:
 
+    $ python ./example.py
     addition_actually_works: passed 100 tests.
 
 That's one hundred test cases generated automatically. In this example
@@ -41,7 +46,7 @@ has support for most Python types, including strings and lists.
 Futhermore it also allows you to define your own generators
 using the <code>@arbitrary</code> decorator.
 
-See _tests.py_ for more usage examples.
+See the _tests_ package for more usage examples.
 
 ## How far does it go?
 
@@ -49,4 +54,18 @@ Although quite functional (pun likely intended), the project is in experimental 
 The aim is to make it very similar to Haskell's _QuickCheck_, in extent
 permitted by the dynamic nature of Python.
 
-Ideas, suggestions and contributions are all very welcome.
+## Cool! Can I help?
+
+Sure thing! Ideas, suggestions and of course contributions are all very welcome.
+
+If you want to start hacking at _pyqcy_ right away, just clone it from here
+and install in development mode (preferably inside a virtualenv):
+
+    $ git clone git://github.com/Xion/pyqcy.git
+    $ cd pyqcy
+    $ python ./setup.py develop
+
+Then you should be able to run tests through _nose_:
+
+    $ pip install nose
+    $ nosetests

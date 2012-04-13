@@ -49,8 +49,7 @@ def main(module='__main__', exit=True, failfast=False):
             if len(with_stats) > 0:
                 stats = OrderedDict()
                 for s in with_stats:
-                    count = stats.get(s, 0)
-                    stats[s] = count + 1
+                    stats[s] = stats.get(s, 0) + 1
                 if len(without_stats) > 0:
                     stats[("<rest>",)] = len(without_stats)
 
