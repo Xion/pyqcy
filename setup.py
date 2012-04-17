@@ -72,7 +72,7 @@ setup(
 	author='Karol Kuczmarski "Xion"',
 	author_email="karol.kuczmarski@gmail.com",
 	url="http://github.com/Xion/pyqcy",
-	license="BSD",
+	license="Simplified BSD",
 
 	classifiers = [
 		"Development Status :: 3 - Alpha",
