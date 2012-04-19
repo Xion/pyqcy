@@ -1,7 +1,6 @@
 """
 Unit tests from properties.
 """
-
 import unittest
 from pyqcy import *
 
