@@ -66,12 +66,12 @@ from setuptools import setup, find_packages
 
 setup(
 	name="pyqcy",
-	version="0.2",
+	version="0.2.1",
 	description="QuickCheck-like testing framework for Python",
     long_description=__doc__,
 	author='Karol Kuczmarski "Xion"',
 	author_email="karol.kuczmarski@gmail.com",
-	url="http://github.com/Xion/pyqcy",
+	url="http://xion.github.com/pyqcy",
 	license="Simplified BSD",
 
 	classifiers = [
