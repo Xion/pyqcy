@@ -6,6 +6,7 @@ import os
 import traceback
 from collections import OrderedDict
 
+from .properties import Property, DEFAULT_TEST_COUNT
 from .utils import partition
 
 
@@ -26,7 +27,6 @@ def main(module='__main__', exit=True, failfast=False):
         for part in module_name.split('.')[1:]:
             module = getattr(module, part)
 
-    from .properties import Property
     props = [v for v in module.__dict__.itervalues()
              if isinstance(v, Property)]
 
@@ -61,8 +61,6 @@ def print_test_results(prop, results):
     Results include any statistical information that the property
     has generated though `yield` statements.
     """
-    from .properties import DEFAULT_TEST_COUNT
-
     print "%s: passed %s test%s." % (prop.func.__name__,
         DEFAULT_TEST_COUNT,
         "s" if DEFAULT_TEST_COUNT != 1 else "")
@@ -82,4 +80,3 @@ def print_test_results(prop, results):
             percentage = "%.2f%%" % (count * 100 / results_count)
             summary = ", ".join(map(str, labels))
             print "%s: %s" % (percentage.rjust(5), summary)
-            
