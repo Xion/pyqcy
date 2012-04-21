@@ -5,6 +5,7 @@ import unittest
 from pyqcy import *
 
 import random
+import json
 
 
 class Arbitraries(unittest.TestCase):
@@ -30,6 +31,10 @@ class Arbitraries(unittest.TestCase):
 
     def test_dict_arbitrary(self):
         dict_update_works.test()
+
+    def test_apply(self):
+        apply_works_with_functions.test()
+        apply_works_with_types.test()
 
     def test_elements_arbitrary(self):
         set_of_elements.test()
@@ -107,6 +112,22 @@ def two_is_two(
     t=two(int)
 ):
     assert len(t) == 2
+
+
+@qc
+def apply_works_with_functions(
+    x=apply(json.dumps,
+            list_(of=int, min_length=1, max_length=64))
+):
+    assert isinstance(x, basestring)
+    assert all(isinstance(i, int) for i in json.loads(x))
+
+@qc
+def apply_works_with_types(
+    x=apply(str, int)
+):
+    assert isinstance(x, str)
+
 
 @qc
 def set_of_elements(

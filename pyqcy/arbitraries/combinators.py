@@ -5,8 +5,30 @@ import functools
 import collections
 import random
 
+from pyqcy.arbitraries import arbitrary, is_arbitrary, to_arbitrary
 from pyqcy.utils import recursive
-from pyqcy.arbitraries import is_arbitrary, to_arbitrary
+
+
+def apply(func, *args, **kwargs):
+    """Creates a generator that applies a function to objects
+    returned by given generator(s). Arguments to that function
+    will be passed in the same manner as the generators have
+    been passed to apply(), i.e. positional args will be passed
+    as positional and keyword as keyword.
+    """
+    if not func:
+        raise ValueError("no function provided")
+    if not callable(func):
+        raise TypeError("expected a callable")
+
+    func_args = [next(to_arbitrary(arg)) for arg in args]
+    func_kwargs = dict((k, next(to_arbitrary(v)))
+                       for (k, v) in kwargs.iteritems())
+
+    @arbitrary
+    def generator():
+        return func(*func_args, **func_kwargs)
+    return generator
 
 
 def combinator(func):
@@ -22,6 +44,7 @@ def combinator(func):
     _2arbitrary = recursive(lambda obj: to_arbitrary(obj)
                                         if is_arbitrary(obj) else obj)
 
+    @arbitrary
     @functools.wraps(func)
     def wrapped(*args, **kwargs):
         if not args:
@@ -40,6 +63,7 @@ def combinator(func):
         return func(*new_args, **kwargs)
 
     return wrapped
+
 
 @combinator
 def elements(*args):
