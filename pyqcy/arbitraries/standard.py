@@ -12,7 +12,7 @@ from pyqcy.arbitraries import arbitrary
 # Arbitrary values' generators for built-in scalar types
 
 @arbitrary(int)
-def int_(min=0, max=sys.maxint):
+def int_(min=-sys.maxint-1, max=sys.maxint):
     """Default arbitrary values' generator for the int type."""
     return random.randint(min, max)
 
@@ -78,10 +78,15 @@ def dict_(keys=None, values=None, items=None,
     """Generator for arbitrary dictionaries. Either `keys` and `values`,
     or the `items` argument must be provided - but not both.
     """
-    if not ((keys and values) or items):
-        raise ValueError("invalid dictionary items' generators provided")
+    kv_provided = keys is not None and values is not None
+    items_provided = items is not None
+    if not (kv_provided or items_provided):
+        raise ValueError("no generators for dictionary items provided")
+    if kv_provided and items_provided:
+        raise ValueError("ambiguous invocation - "
+                         "provide either keys and values, or items")
 
-    next_item = ((lambda: next(items)) if items else
+    next_item = ((lambda: next(items)) if items_provided else
                  (lambda: (next(keys), next(values))))
     length = random.randint(min_length, max_length)
     return dict(next_item() for _ in xrange(length))
