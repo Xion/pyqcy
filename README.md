@@ -12,8 +12,8 @@ anyone want another library dedicated to this end?...
 For one, _pyqcy_ \[pyksi:\] supports a unique testing model, inspired by the
 brilliant _QuickCheck_ library for Haskell. Rather than writing fully-fledged
 test cases, you only need to define logical **properties** that your code
-has to satisfy. Based on that, _pyqcy_ will automatically generate test cases
-- hundreds of them, in fact!
+has to satisfy. Based on that, _pyqcy_ will automatically generate test cases -
+hundreds of them, in fact!
 
 ## So, how does it look like?
 
@@ -24,7 +24,7 @@ Install _pyqcy_:
 and then try this:
 
 ```python
-from pyqcy import qc, int_ main
+from pyqcy import qc, int_, main
 
 @qc
 def addition_actually_works(
