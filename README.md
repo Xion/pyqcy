@@ -1,7 +1,8 @@
 # pyqcy
 
-[![Build Status](https://secure.travis-ci.org/Xion/pyqcy.png)](http://travis-ci.org/Xion/pyqcy)
 _QuickCheck_-like testing framework for Python
+
+[![Build Status](https://secure.travis-ci.org/Xion/pyqcy.png)](http://travis-ci.org/Xion/pyqcy)
 
 ## What, another testing utility?
 
