@@ -2,9 +2,9 @@
 Combinators for generators of arbitrary values.
 """
 import functools
-import collections
 import inspect
 import random
+from collections import Iterable, Mapping, OrderedDict
 
 from pyqcy.arbitraries import arbitrary, is_arbitrary, to_arbitrary
 from pyqcy.utils import recursive
@@ -40,7 +40,7 @@ def data(schema):
     if schema is None:
         raise ValueError("no schema specified")
 
-    is_data_structure = (isinstance(schema, collections.Iterable)
+    is_data_structure = (isinstance(schema, Iterable)
                          and not inspect.isgenerator(schema))
     if not is_data_structure:
         raise TypeError("schema must be a data structure")
@@ -49,8 +49,10 @@ def data(schema):
         """Constructs a new data structure instance conforming
         to given schema. This function proceeds recursively.
         """
-        if isinstance(s, collections.Mapping):
-            res = {}
+        if isinstance(s, Mapping):
+            res = (OrderedDict()
+                   if isinstance(s, OrderedDict)
+                   else dict())
             items = s.iteritems()
         else:
             res = [None] * len(s)
@@ -60,10 +62,13 @@ def data(schema):
             if is_arbitrary(value):
                 value = to_arbitrary(value)
                 res[key] = next(value)
-            elif isinstance(value, collections.Iterable):
+            elif isinstance(value, Iterable):
                 res[key] = instance_of(value)
             else:
                 res[key] = value
+
+        if isinstance(s, tuple):
+            res = tuple(res)
         return res
 
     @arbitrary
@@ -93,7 +98,7 @@ def combinator(func):
 
         new_args = []
         for arg in args:
-            arg_collection = (isinstance(arg, collections.Iterable)
+            arg_collection = (isinstance(arg, Iterable)
                               and not is_arbitrary(arg))
             if arg_collection:
                 arg = map(_2arbitrary, arg)

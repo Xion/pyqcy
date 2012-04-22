@@ -38,6 +38,7 @@ class Arbitraries(unittest.TestCase):
 
     def test_data(self):
         data_works_with_lists.test()
+        data_works_with_tuples.test()
         data_works_with_dictionaries.test()
 
     def test_elements_arbitrary(self):
@@ -154,6 +155,16 @@ def data_works_with_lists(
     assert isinstance(x, list)
     assert len(x) == 2
     assert isinstance(x[0], int) and isinstance(x[1], str)
+
+
+@qc
+def data_works_with_tuples(
+    x=data((float, str, int))
+):
+    assert isinstance(x, tuple)
+    assert len(x) == 3
+    for i, t in enumerate((float, str, int)):
+        assert isinstance(x[i], t)
 
 
 @qc
