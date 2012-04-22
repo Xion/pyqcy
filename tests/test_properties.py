@@ -8,10 +8,7 @@ from pyqcy import *
 class Properties(unittest.TestCase):
     """Test cases for functionality related to properties."""
 
-    def test_positional_qc_arguments(self):
-        addition_works_within_hundred.test()
-
-    def test_arbitraries_in_default_args(self):
+    def test_passing_property(self):
         subtraction_doesnt_break.test()
 
     def test_failing_property(self):
@@ -29,11 +26,6 @@ def two_digit_integers():
 
 
 # Test properties
-
-@qc(two_digit_integers, two_digit_integers)
-def addition_works_within_hundred(x, y):
-    assert 20 <= x + y < 200
-
 
 @qc
 def subtraction_doesnt_break(x=int, y=int):

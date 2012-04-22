@@ -70,19 +70,23 @@ def random_floats():
 
 # Test properties
 
-@qc(int, int)
-def addition_doesnt_break(x, y):
+@qc
+def addition_doesnt_break(x=int, y=int):
     _ = x + y
 
 
-@qc(float_(min=0.0), float_(min=0.0))
-def addition_works_for_positive_floats(x, y):
+@qc
+def addition_works_for_positive_floats(
+    x=float_(min=0.0), y=float_(min=0.0)
+):
     sum = x + y
     assert sum >= x and sum >= y
 
 
-@qc(s=str_with_len_lt5)
-def case_transform_preserves_length(s):
+@qc
+def case_transform_preserves_length(
+    s=str_with_len_lt5
+):
     assert len(s) == len(s.upper())
     assert len(s) == len(s.lower())
 

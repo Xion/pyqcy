@@ -47,7 +47,7 @@ def data(schema):
 
     def instance_of(s):
         """Constructs a new data structure instance conforming
-        to given schema. This functions proceeds recursively.
+        to given schema. This function proceeds recursively.
         """
         if isinstance(s, collections.Mapping):
             res = {}
