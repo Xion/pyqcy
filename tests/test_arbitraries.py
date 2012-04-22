@@ -36,6 +36,10 @@ class Arbitraries(unittest.TestCase):
         apply_works_with_functions.test()
         apply_works_with_types.test()
 
+    def test_data(self):
+        data_works_with_lists.test()
+        data_works_with_dictionaries.test()
+
     def test_elements_arbitrary(self):
         set_of_elements.test()
 
@@ -127,6 +131,28 @@ def apply_works_with_types(
     x=apply(str, int)
 ):
     assert isinstance(x, str)
+
+
+@qc
+def data_works_with_lists(
+    x=data([int, str])
+):
+    assert isinstance(x, list)
+    assert len(x) == 2
+    assert isinstance(x[0], int) and isinstance(x[1], str)
+
+@qc
+def data_works_with_dictionaries(
+    x=data({
+        'login': str_(of='abcdefghijklmnopqrstuvwxyz',
+                      min_length=4, max_length=16),
+        'password': str_(min_length=8, max_length=64),
+    })
+):
+    assert isinstance(x, dict)
+    assert len(x) == 2
+    assert 'login' in x and 'password' in x
+    assert isinstance(x['login'], str) and isinstance(x['password'], str)
 
 
 @qc

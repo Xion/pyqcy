@@ -3,6 +3,7 @@ Combinators for generators of arbitrary values.
 """
 import functools
 import collections
+import inspect
 import random
 
 from pyqcy.arbitraries import arbitrary, is_arbitrary, to_arbitrary
@@ -28,6 +29,45 @@ def apply(func, *args, **kwargs):
     @arbitrary
     def generator():
         return func(*func_args, **func_kwargs)
+    return generator
+
+def data(schema):
+    """Creates a generator which outputs data structures conforming
+    to given schema. Schema can be a list or dictionary that contains
+    either immediate values or other arbitrary generators.
+    """
+    if schema is None:
+        raise ValueError("no schema specified")
+
+    is_data_structure = (isinstance(schema, collections.Iterable)
+                         and not inspect.isgenerator(schema))
+    if not is_data_structure:
+        raise TypeError("schema must be a data structure")
+
+    def instance_of(s):
+        """Constructs a new data structure instance conforming
+        to given schema. This functions proceeds recursively.
+        """
+        if isinstance(s, collections.Mapping):
+            res = {}
+            items = s.iteritems()
+        else:
+            res = [None] * len(s)
+            items = enumerate(s)
+
+        for key, value in items:
+            if is_arbitrary(value):
+                value = to_arbitrary(value)
+                res[key] = next(value)
+            elif isinstance(value, collections.Iterable):
+                res[key] = instance_of(value)
+            else:
+                res[key] = value
+        return res
+
+    @arbitrary
+    def generator():
+        return instance_of(schema)
     return generator
 
 
