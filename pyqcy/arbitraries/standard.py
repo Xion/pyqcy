@@ -6,7 +6,7 @@ import sys
 import random
 import functools
 
-from pyqcy.arbitraries import arbitrary
+from pyqcy.arbitraries import arbitrary, is_arbitrary
 
 
 # Arbitrary values' generators for built-in scalar types
@@ -33,7 +33,9 @@ def complex_(min_real=-float(sys.maxint), max_real=float(sys.maxint),
 def str_(of=int_(min=0, max=255), min_length=1, max_length=64):
     """Default arbitrary values' generator for strings."""
     length = random.randint(min_length, max_length)
-    return ''.join(chr(next(of)) for _ in xrange(length))
+    if is_arbitrary(of):
+        return ''.join(chr(next(of)) for _ in xrange(length))
+    return ''.join(random.choice(of) for _ in xrange(length))
 
 
 # Arbitrary values' generators for built-in collection types
@@ -70,7 +72,10 @@ def list_(of, min_length=0, max_length=1024):
     can come from any arbitrary generator passed as first argument.
     """
     length = random.randint(min_length, max_length)
-    return [next(of) for _ in xrange(length)]
+    if is_arbitrary(of):
+        return [next(of) for _ in xrange(length)]
+    return [random.choice(of) for _ in xrange(length)]
+    
     
 @arbitrary
 def dict_(keys=None, values=None, items=None,
