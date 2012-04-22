@@ -23,7 +23,6 @@ class Tag(object):
         self.value = value
 
 
-
 def collect(value):
     """Collects test cases that share the same value
     (passed as argument) for statistical purposes.

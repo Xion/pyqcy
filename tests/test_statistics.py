@@ -26,6 +26,7 @@ def sorting_short_lists(
     yield collect(len(l))
     assert list(sorted(l))[-1] == max(l)
 
+
 @qc
 def sort_preserves_length(l=list_(int, max_length=64)):
     yield classify(len(l) == 0, "empty list")

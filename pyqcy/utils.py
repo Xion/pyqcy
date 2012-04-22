@@ -47,6 +47,7 @@ def optional_args(decor):
 
     return wrapped
 
+
 def recursive(func):
     ''' Constructs a function that which recursively applies given callable
     to objects, regardless of whether they are lists (iterables)
@@ -63,5 +64,5 @@ def recursive(func):
             return iter_cls([recursive_func(item, *args, **kwargs)
                              for item in obj])
         return func(obj)
-    
+
     return recursive_func

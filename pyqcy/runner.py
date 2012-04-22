@@ -30,7 +30,7 @@ def main(module='__main__', exit=True, failfast=False):
     props = [v for v in module.__dict__.itervalues()
              if isinstance(v, Property)]
 
-    success = run_tests(props, failfast=failfast)    
+    success = run_tests(props, failfast=failfast)
     if exit:
         sys.exit(0 if success else 1)
     return len(props)
@@ -55,6 +55,7 @@ def run_tests(props, failfast=False):
             print_test_results(p, results)
 
     return success
+
 
 def print_test_results(prop, results):
     """Prints results of testing a single property.

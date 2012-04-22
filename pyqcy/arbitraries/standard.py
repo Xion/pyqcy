@@ -12,14 +12,16 @@ from pyqcy.arbitraries import arbitrary, is_arbitrary
 # Arbitrary values' generators for built-in scalar types
 
 @arbitrary(int)
-def int_(min=-sys.maxint-1, max=sys.maxint):
+def int_(min=-sys.maxint - 1, max=sys.maxint):
     """Default arbitrary values' generator for the int type."""
     return random.randint(min, max)
+
 
 @arbitrary(float)
 def float_(min=-float(sys.maxint), max=float(sys.maxint)):
     """Default arbitrary values' generator for the float type."""
     return min + random.random() * (max - min)
+
 
 @arbitrary(complex)
 def complex_(min_real=-float(sys.maxint), max_real=float(sys.maxint),
@@ -28,6 +30,7 @@ def complex_(min_real=-float(sys.maxint), max_real=float(sys.maxint),
     reals = float_(min_real, max_real)
     imags = float_(min_imag, max_imag)
     return complex(next(reals), next(imags))
+
 
 @arbitrary(str)
 def str_(of=int_(min=0, max=255), min_length=1, max_length=64):
@@ -62,10 +65,12 @@ def tuple_(*args, **kwargs):
 
     return tuple(next(of) for _ in xrange(n))
 
+
 two = functools.partial(tuple_, n=2)
 three = functools.partial(tuple_, n=3)
 four = functools.partial(tuple_, n=4)
-    
+
+
 @arbitrary
 def list_(of, min_length=0, max_length=1024):
     """Generator for arbitrary lists. List elements themselves
@@ -75,8 +80,8 @@ def list_(of, min_length=0, max_length=1024):
     if is_arbitrary(of):
         return [next(of) for _ in xrange(length)]
     return [random.choice(of) for _ in xrange(length)]
-    
-    
+
+
 @arbitrary
 def dict_(keys=None, values=None, items=None,
           min_length=0, max_length=1024):

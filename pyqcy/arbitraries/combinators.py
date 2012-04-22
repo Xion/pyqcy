@@ -31,6 +31,7 @@ def apply(func, *args, **kwargs):
         return func(*func_args, **func_kwargs)
     return generator
 
+
 def data(schema):
     """Creates a generator which outputs data structures conforming
     to given schema. Schema can be a list or dictionary that contains
@@ -114,6 +115,7 @@ def elements(*args):
         raise ValueError("cannot pick random element from empty sequence")
     return random.choice(args)
 
+
 @combinator
 def one_of(*args):
     """Creates a generator that chooses among given generators, giving
@@ -122,6 +124,7 @@ def one_of(*args):
     if not args:
         raise ValueError("no generators to choose from")
     return next(random.choice(args))
+
 
 @combinator
 def frequency(*args):

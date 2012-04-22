@@ -14,6 +14,7 @@ __all__ = ['qc']
 
 DEFAULT_TEST_COUNT = 100
 
+
 class Property(object):
     """A property that can be QuickChecked."""
 

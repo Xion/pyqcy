@@ -27,19 +27,23 @@ class Properties(unittest.TestCase):
 def two_digit_integers():
     return random.randint(10, 99)
 
+
 # Test properties
 
 @qc(two_digit_integers, two_digit_integers)
 def addition_works_within_hundred(x, y):
     assert 20 <= x + y < 200
 
+
 @qc
 def subtraction_doesnt_break(x=int, y=int):
     _ = x + y
 
+
 @qc
 def failing():
     assert False
+
 
 @qc
 def adding_to(x=0, y=int_(min=0, max=10)):
