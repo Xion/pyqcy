@@ -66,7 +66,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pyqcy",
-    version="0.2.2",
+    version="0.3",
     description="QuickCheck-like testing framework for Python",
     long_description=__doc__,
     author='Karol Kuczmarski "Xion"',
