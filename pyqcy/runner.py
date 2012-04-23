@@ -4,7 +4,6 @@ Simple, built-in test runner.
 import sys
 import os
 import traceback
-from collections import OrderedDict
 
 from .properties import Property, DEFAULT_TEST_COUNT
 from .utils import partition
