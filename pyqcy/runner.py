@@ -70,14 +70,15 @@ def print_test_results(prop, results):
     with_stats, without_stats = partition(lambda r: len(r) > 0,
                                           results)
     if len(with_stats) > 0:
-        stats = OrderedDict()
+        stats = {}
         for s in with_stats:
             stats[s] = stats.get(s, 0) + 1
+        stats = stats.items()
         if len(without_stats) > 0:
-            stats[("<rest>",)] = len(without_stats)
+            stats.append(("<rest>", len(without_stats)))
 
         results_count = float(len(results))
-        for labels, count in stats.iteritems():
+        for labels, count in stats:
             percentage = "%.2f%%" % (count * 100 / results_count)
             summary = ", ".join(map(str, labels))
             print "%s: %s" % (percentage.rjust(5), summary)
