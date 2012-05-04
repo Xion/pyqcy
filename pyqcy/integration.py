@@ -36,4 +36,4 @@ class TestCase(unittest.TestCase):
         """Runs tests for all properties defined within this class."""
         props = [v for v in self.__class__.__dict__.itervalues()
                  if isinstance(v, Property)]
-        run_tests(props)
+        run_tests(props, propagate_exc=True)

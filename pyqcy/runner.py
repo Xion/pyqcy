@@ -36,7 +36,7 @@ def main(module='__main__', exit=True, failfast=False):
     return len(props)
 
 
-def run_tests(props, failfast=False):
+def run_tests(props, failfast=False, propagate_exc=False):
     """Executes tests for given list of properties.
     Returns boolean flag indicating if all the tests succeeded.
     """
@@ -51,6 +51,8 @@ def run_tests(props, failfast=False):
             success = False
             if failfast:
                 break
+            if propagate_exc:
+                raise
         else:
             print_test_results(p, results)
 
