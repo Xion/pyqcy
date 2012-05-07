@@ -4,7 +4,12 @@ Combinators for generators of arbitrary values.
 import functools
 import inspect
 import random
-from collections import Iterable, Mapping, OrderedDict
+
+from collections import Iterable, Mapping
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = dict # fallback for Python 2.6
 
 from pyqcy.arbitraries import arbitrary, is_arbitrary, to_arbitrary
 from pyqcy.utils import recursive
