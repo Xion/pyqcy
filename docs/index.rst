@@ -13,7 +13,7 @@ generate test cases for you - hundreds of them, in fact!
 Example
 -------
 
-::
+.. code-block:: python
 
     from pyqcy import qc, int_ main
 
@@ -27,7 +27,7 @@ Example
     if __name__ == '__main__':
         main()
 
-::
+.. code-block:: console
 
     $ python ./example.py
     addition_actually_works: passed 100 tests.
@@ -38,11 +38,15 @@ Yes, that's 100 distinct test cases. *pyqcy* has generated them all for you!
 Installation
 ------------
 
-Either from PyPI::
+Either from PyPI:
+
+.. code-block:: console
 
     $ pip install pyqcy
 
-or directly from GitHub if you want the bleeding edge version::
+or directly from GitHub if you want the bleeding edge version:
+
+.. code-block:: console
 
     $ git clone git://github.com/Xion/pyqcy.git
     $ cd pyqcy

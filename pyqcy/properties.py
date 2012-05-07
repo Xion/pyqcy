@@ -123,8 +123,22 @@ class Property(object):
 
 @optional_args
 class qc(object):
-    """Decorator to be applied on functions that encode
-    QuickCheck properties to be tested.
+    """Decorator for Python functions that define properties
+    to be tested by pyqcy.
+
+    It is expected that default values for function arguments
+    define generators that will be used to generate data
+    for test cases. See the section about
+    :doc:`using generators <arbitraries>` for more information.
+
+    Example of using `@qc` to define a test property::
+
+        @qc
+        def len_behaves_correctly(
+            l=list_(int, min_length=1, max_length=64)
+        ):
+            assert len(l) == l.__len__()
+
     """
     def __init__(self):
         pass  # argumentless, for now
