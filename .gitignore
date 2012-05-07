@@ -1,4 +1,5 @@
 *.py[co]
+_build/
 
 # packages
 *.egg
