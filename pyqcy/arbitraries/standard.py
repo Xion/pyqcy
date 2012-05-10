@@ -14,12 +14,13 @@ from pyqcy.arbitraries import arbitrary, is_arbitrary
 @arbitrary(int)
 def int_(min=-sys.maxint - 1, max=sys.maxint):
     """Generator for arbitrary integers.
+
     By default, it generates value from the whole range
     supported by the system but this can be adjusted using
     parameters.
 
-        :param min: A minimum value of integer to generate
-        :param max: A maximum value of integer to generate
+    :param min: A minimum value of integer to generate
+    :param max: A maximum value of integer to generate
     """
     return random.randint(min, max)
 
@@ -28,8 +29,8 @@ def int_(min=-sys.maxint - 1, max=sys.maxint):
 def float_(min=-float(sys.maxint), max=float(sys.maxint)):
     """Generator for arbitrary floats.
 
-        :param min: A minimum value of float to generate
-        :param max: A maximum value of float to generate
+    :param min: A minimum value of float to generate
+    :param max: A maximum value of float to generate
     """
     return min + random.random() * (max - min)
 
@@ -43,12 +44,12 @@ def complex_(min_real=-float(sys.maxint), max_real=float(sys.maxint),
     Parameters for this generator allow for adjusting the rectangle
     on the complex plane where the values will come from.
 
-        :param min_real: A minimum value for real part of generated numbers
-        :param max_real: A maximum value for real part of generated numbers
-        :param min_imag: A minimum value for the imaginary part
-                         of generated numbers
-        :param max_imag: A maximum value for the imaginary part
-                         of generated numbers
+    :param min_real: A minimum value for real part of generated numbers
+    :param max_real: A maximum value for real part of generated numbers
+    :param min_imag: A minimum value for the imaginary part
+                     of generated numbers
+    :param max_imag: A maximum value for the imaginary part
+                     of generated numbers
     """
     reals = float_(min_real, max_real)
     imags = float_(min_imag, max_imag)
@@ -62,11 +63,11 @@ def str_(of=int_(min=0, max=255), min_length=1, max_length=64):
     Parameters for this generator allow for adjusting the length
     of resulting strings and the set of characters they are composed of.
 
-        :param of: Characters used to construct the strings.
-                   This can be either an iterable of characters
-                   (e.g. a string) or a generator that produces them.
-        :param min_length: A minimum length of string to generate
-        :param max_length: A maximum length of string to generate
+    :param of: Characters used to construct the strings.
+               This can be either an iterable of characters
+               (e.g. a string) or a generator that produces them.
+    :param min_length: A minimum length of string to generate
+    :param max_length: A maximum length of string to generate
     """
     length = random.randint(min_length, max_length)
     char = lambda ch: ch if isinstance(ch, basestring) else chr(ch)
@@ -87,10 +88,15 @@ def tuple_(*args, **kwargs):
 
         tuple_(int_(min=0, max=255), str_(max_length=64)) 
 
-    or use :param:`n` argument with a single generator
-    for uniform tuples::
+    or use `n` argument with a single generator for uniform tuples::
 
         ip_addresses = tuple_(int_(min=0, max=255), n=4)
+        ip_addresses = tuple_(of=int_(min=0, max=255), n=4)
+
+    Those two styles are mutually exclusive - only one can be used at a time.
+
+    :param of: Generator used to generate tuple values
+    :param n: Tuple length
     """
     n = kwargs.get('n')
     if n is None:
@@ -129,11 +135,11 @@ def list_(of, min_length=0, max_length=1024):
     Parameters for this generator allow for adjusting the length
     of resulting list and elements they contain.
 
-        :param of: Generator for list elements
-        :param min_length: A minimum length of list to generate
-        :param max_length: A maximum length of list to generate
+    :param of: Generator for list elements
+    :param min_length: A minimum length of list to generate
+    :param max_length: A maximum length of list to generate
 
-    Example of test property using :func:`list_`::
+    Example of test property that uses :func:`list_`::
 
         @qc
         def calculating_average(
@@ -155,21 +161,23 @@ def dict_(keys=None, values=None, items=None,
     """Generator for arbitrary dictionaries.
 
     Dictionaries are specified using generators - either for
-    :param:`keys` and :param:`values` separately::
+    `keys` and `values` separately::
 
         dict_(keys=str_(max_length=64), values=str_(max_length=64))
 
-    or already combined into :param:`items` (which should yield
-    key-value pairs)::
+    or already combined into `items` (which should yield key-value pairs)::
 
         dict_(items=two(str_(max_length=64)))
 
-    Those two styles arem utually exclusive, though.
+    Those two styles are mutually exclusive - only one can be used at a time.
 
-        :param min_length: A minimum number of items
-                           the resulting dictionary will contain
-        :param max_length: A maximum number of items
-                           the resulting dictionary will contain
+    :param keys: Generator for dictionary keys
+    :param values: Generator for dictionary values
+    :param items: Generator for dictionary items (2-element tuples).
+    :param min_length: A minimum number of items
+                       the resulting dictionary will contain
+    :param max_length: A maximum number of items
+                       the resulting dictionary will contain
     """
     kv_provided = keys is not None and values is not None
     items_provided = items is not None

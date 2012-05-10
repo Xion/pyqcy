@@ -16,11 +16,29 @@ from pyqcy.utils import recursive
 
 
 def apply(func, *args, **kwargs):
-    """Creates a generator that applies a function to objects
-    returned by given generator(s). Arguments to that function
-    will be passed in the same manner as the generators have
-    been passed to apply(), i.e. positional args will be passed
-    as positional and keyword as keyword.
+    """Generator that applies a specific function to objects returned
+    by given generator(s).
+
+    Any number of generators can be passed as arguments, and they can
+    be both positional (`args`) or keyword arguments (`kwargs`).
+    In any case, the same invocation style (i.e. positional or keyword)
+    will be used when calling the `func` with actual values
+    obtained from generators.
+
+    As an example, the following call::
+
+        apply(json.dumps, dict_(items=two(str)))
+
+    will create a generator that yields results of `json.dumps(d)` invocations,
+    where `d` is an arbitrary dictionary that maps strings to strings.
+
+    Similarly, using `apply` as shown below::
+
+        apply(itertools.product, list_(of=int), repeat=4)
+
+    gets us a generator that produces results of
+    `itertools.product(l, repeat=4)`, where `l` is an arbitrary list of `int`
+    values.
     """
     if not func:
         raise ValueError("no function provided")
@@ -38,9 +56,27 @@ def apply(func, *args, **kwargs):
 
 
 def data(schema):
-    """Creates a generator which outputs data structures conforming
-    to given schema. Schema can be a list or dictionary that contains
-    either immediate values or other arbitrary generators.
+    """Generator that outputs data structures conforming to given schema.
+
+    :param schema: A list of dictionary that contains either
+                   immediate values or other generators
+
+    A typical example of using `data`:
+
+    .. code-block:: python
+
+        import string
+
+        @qc
+        def creating_user_works(
+            request=data({
+                'login': str_(of=string.ascii_letters | string.digits,
+                              min_length=3, max_length=32),
+                'password': str_(min_length=8, max_length=128),
+            })
+        ):
+            response = create_user(request['login'], request['password'])
+            assert response['status'] == "OK
     """
     if schema is None:
         raise ValueError("no schema specified")
@@ -85,12 +121,16 @@ def data(schema):
 def combinator(func):
     """Decorator for arbitrary combinator functions which take
     a collection of arguments as either an actual list/sequence,
-    or as positional arguments. In other words, it makes
-    it possible to use the following two forms of invocation:
-    >>> func([1, 2, 3])
-    >>> func(1, 2, 3)
-    In both cases func() receives 1, 2 and 3 as
-    positional arguments (*args).
+    or as positional arguments.
+
+    In other words, it makes it possible to use
+    the following two forms of invocation::
+
+        func([1, 2, 3])
+        func(1, 2, 3)
+
+    In both cases `func` receives 1, 2 and 3 as
+    positional arguments (`*args`).
     """
     _2arbitrary = recursive(lambda obj: to_arbitrary(obj)
                                         if is_arbitrary(obj) else obj)
@@ -118,8 +158,11 @@ def combinator(func):
 
 @combinator
 def elements(*args):
-    """Creates a generator that returns a random element from those given.
-    Every element has equal probability of being picked.
+    """Generator that returns a random element from given set.
+
+    Elements can be passed either directly as arguments (`elements(1, 2, 3)`)
+    or as a list (`elements([1, 2, 3])`). Every element has equal probability
+    of being chosen.
     """
     if not args:
         raise ValueError("cannot pick random element from empty sequence")
@@ -128,8 +171,13 @@ def elements(*args):
 
 @combinator
 def one_of(*args):
-    """Creates a generator that chooses among given generators, giving
-    equal probability to each one.
+    """Generator that yields values coming from given set of generators.
+
+    Generators can be passed either directly as arguments
+    (`one_of(int, float)`) or as a list (`one_of([int, float])`).
+    Every generator has equal probability of being chosen;
+    to use a non-uniform probability distribution use
+    the :func:`frequency` function.
     """
     if not args:
         raise ValueError("no generators to choose from")
@@ -138,10 +186,24 @@ def one_of(*args):
 
 @combinator
 def frequency(*args):
-    """Creates a generator that chooses among given generators, according
-    to probability (frequency) assigned to them. Function accepts pairs
-    (or list of pairs) where the first element is the probability
-    and the second element is a particular generator.
+    """Generator that yields coming from given set of generators,
+    according to their probability distribution.
+
+    The distribution is just a set of tuples: `(gen, freq)`
+    which can be passed either directly as arguments::
+
+        frequency((int, 1), (float, 2))
+
+    or a a list::
+
+        frequency([(int, 1), (float, 2)])
+
+    The second element of tuple (`freq`) is the relative frequency
+    of values from particular generator, compared to those from other
+    generators. In both examples above the resulting generator will
+    yield `float` values twice as often as `int` values.
+
+    Typically, it's convenient to use frequencies that sum to 1 or 100.
     """
     if not args:
         raise ValueError("no generators to choose from")
