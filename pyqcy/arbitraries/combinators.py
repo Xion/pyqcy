@@ -37,8 +37,7 @@ def apply(func, *args, **kwargs):
         apply(itertools.product, list_(of=int), repeat=4)
 
     gets us a generator that produces results of
-    `itertools.product(l, repeat=4)`, where `l` is an arbitrary list of `int`
-    values.
+    `itertools.product(l, repeat=4)`, where `l` is an arbitrary list of `int`\ s.
     """
     if not func:
         raise ValueError("no function provided")
@@ -201,7 +200,7 @@ def frequency(*args):
     The second element of tuple (`freq`) is the relative frequency
     of values from particular generator, compared to those from other
     generators. In both examples above the resulting generator will
-    yield `float` values twice as often as `int` values.
+    yield `float`\ s twice as often as `int`\ s.
 
     Typically, it's convenient to use frequencies that sum to 1 or 100.
     """

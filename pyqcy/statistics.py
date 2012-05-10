@@ -9,8 +9,9 @@ __all__ = ['collect', 'classify']
 
 class Tag(object):
     """A tag that can be assigned to a test case.
+
     It can be any hashable value, i.e. a one that
-    could be part of a set, or a key in dictionary.
+    could be a set element or dictionary key.
 
     This is mostly a marker class - a wrapper that
     is used to distinguish results of statistic function
@@ -26,8 +27,12 @@ class Tag(object):
 def collect(value):
     """Collects test cases that share the same value
     (passed as argument) for statistical purposes.
-    The value can be any hashable.
-    Typical usage is as follows:
+
+    :param value: Value to collect. This can be any hashable,
+                  i.e. a value that could be a set element
+                  or dictionary key.
+
+    Typical usage of `collect` is as follows:
 
     .. code-block:: python
 
@@ -43,9 +48,17 @@ def collect(value):
 
 def classify(condition, label):
     """Classifies test cases depending on whether they satisfy
-    given condition. If a test case meets the condition, it will
-    "stamped" with given label that will subsequently appear
-    in statistical report.
+    given condition.
+
+    If a test case meets the condition, it will be "stamped"
+    with given label that will subsequently appear in statistical report
+    displayed after a property has been tested.
+
+    :param condition: Condition that the test data should satisfy
+                      in order for the test case to be stamped with `label`.
+    :param label: A label to be associated with this test case
+                  if `condition` turns out to be true
+
     Typical usage is as follows:
 
     .. code-block:: python
@@ -56,4 +69,5 @@ def classify(condition, label):
             yield classify(len(l) < 10, "short list")
             assert len(list(sorted(l))) == len(l)
     """
-    return Tag(label) if condition else None
+    satisfied = condition() if callable(condition) else bool(condition)
+    return Tag(label) if satisfied else None
