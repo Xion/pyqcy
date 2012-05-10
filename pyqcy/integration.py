@@ -12,15 +12,18 @@ __all__ = ['TestCase']
 
 
 class TestCase(unittest.TestCase):
-    """Test case containing pyqcy properties that should be tested
-    automatically, as part of a standard unit test run.
-    Properties should be defined directly within a subclass,
-    using a standard @qc decorator - for example:
+    """`unittest` test case for pyqcy properties.
+
+    Properties defined here within subclasses of `TestCase`
+    will be verified automatically as a part of standard `unittest` run.
+    To define them, use the typical syntax with :func:`qc` decorator::
 
         class Sorting(TestCase):
             '''Properties that must hold for a sorting.'''
             @qc
-            def sort_preserves_length(l=list_(of=int, max_length=128)):
+            def sort_preserves_length(
+                l=list_(of=int, max_length=128)
+            ):
                 assert len(l) == len(list(sorted(l)))
             @qc
             def sort_finds_minimum(
@@ -28,8 +31,8 @@ class TestCase(unittest.TestCase):
             ):
                 assert min(l) == list(sorted(l))[0]
 
-    Since pyqcy.TestCase is a subclass of standard unittest.TestCase,
-    it will be discovered by unittest.main(), nosetests and similar
+    Since `TestCase` itself is a subclass of standard `unittest.TestCase`,
+    it will be discovered by :func:`unittest.main`, nosetests or similar
     testing utilities.
     """
     def test(self):
