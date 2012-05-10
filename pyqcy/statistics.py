@@ -29,6 +29,8 @@ def collect(value):
     The value can be any hashable.
     Typical usage is as follows:
 
+    .. code-block:: python
+
         @qc
         def sort_works(
             l=list_(int, min_length=1, max_length=64)
@@ -45,6 +47,8 @@ def classify(condition, label):
     "stamped" with given label that will subsequently appear
     in statistical report.
     Typical usage is as follows:
+
+    .. code-block:: python
 
         @qc
         def sort_preserves_length(l=list_(int, max_length=64)):
