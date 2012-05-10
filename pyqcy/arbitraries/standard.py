@@ -13,20 +13,43 @@ from pyqcy.arbitraries import arbitrary, is_arbitrary
 
 @arbitrary(int)
 def int_(min=-sys.maxint - 1, max=sys.maxint):
-    """Default arbitrary values' generator for the int type."""
+    """Generator for arbitrary integers.
+    By default, it generates value from the whole range
+    supported by the system but this can be adjusted using
+    parameters.
+
+        :param min: A minimum value of integer to generate
+        :param max: A maximum value of integer to generate
+    """
     return random.randint(min, max)
 
 
 @arbitrary(float)
 def float_(min=-float(sys.maxint), max=float(sys.maxint)):
-    """Default arbitrary values' generator for the float type."""
+    """Generator for arbitrary floats.
+
+        :param min: A minimum value of float to generate
+        :param max: A maximum value of float to generate
+    """
     return min + random.random() * (max - min)
 
 
 @arbitrary(complex)
 def complex_(min_real=-float(sys.maxint), max_real=float(sys.maxint),
              min_imag=-float(sys.maxint), max_imag=float(sys.maxint)):
-    """Default arbitrary values' generator for the complex type."""
+    """Generator for arbitrary complex numbers
+    of the built-in Python complex type.
+
+    Parameters for this generator allow for adjusting the rectangle
+    on the complex plane where the values will come from.
+
+        :param min_real: A minimum value for real part of generated numbers
+        :param max_real: A maximum value for real part of generated numbers
+        :param min_imag: A minimum value for the imaginary part
+                         of generated numbers
+        :param max_imag: A maximum value for the imaginary part
+                         of generated numbers
+    """
     reals = float_(min_real, max_real)
     imags = float_(min_imag, max_imag)
     return complex(next(reals), next(imags))
@@ -34,20 +57,40 @@ def complex_(min_real=-float(sys.maxint), max_real=float(sys.maxint),
 
 @arbitrary(str)
 def str_(of=int_(min=0, max=255), min_length=1, max_length=64):
-    """Default arbitrary values' generator for strings."""
+    """Generator for arbitrary strings.
+
+    Parameters for this generator allow for adjusting the length
+    of resulting strings and the set of characters they are composed of.
+
+        :param of: Characters used to construct the strings.
+                   This can be either an iterable of characters
+                   (e.g. a string) or a generator that produces them.
+        :param min_length: A minimum length of string to generate
+        :param max_length: A maximum length of string to generate
+    """
     length = random.randint(min_length, max_length)
+    char = lambda ch: ch if isinstance(ch, basestring) else chr(ch)
     if is_arbitrary(of):
-        return ''.join(chr(next(of)) for _ in xrange(length))
-    return ''.join(random.choice(of) for _ in xrange(length))
+        return ''.join(char(next(of)) for _ in xrange(length))
+    return ''.join(char(random.choice(of)) for _ in xrange(length))
 
 
 # Arbitrary values' generators for built-in collection types
 
 @arbitrary
 def tuple_(*args, **kwargs):
-    """Generator for arbitrary tuples. Resulting tuples are always
-    of same length, equal to number of arbitrary generators passed
-    to this function or the value of `n` keyword argument.
+    """Generator for arbitrary tuples.
+
+    The tuples are always of the same length but their values
+    can come from different generators. There two ways to specify
+    those generators - either enumerate them all::
+
+        tuple_(int_(min=0, max=255), str_(max_length=64)) 
+
+    or use :param:`n` argument with a single generator
+    for uniform tuples::
+
+        ip_addresses = tuple_(int_(min=0, max=255), n=4)
     """
     n = kwargs.get('n')
     if n is None:
@@ -66,15 +109,39 @@ def tuple_(*args, **kwargs):
     return tuple(next(of) for _ in xrange(n))
 
 
+#: Generator for arbitrary pairs, combining two values
+#: coming from a single generator into tuple of length 2.
 two = functools.partial(tuple_, n=2)
+
+#: Generator for arbitrary triples, combining two values
+#: coming from a single generator into tuple of length 3.
 three = functools.partial(tuple_, n=3)
+
+#: Generator for arbitrary quadruples, combining two values
+#: coming from a single generator into tuple of length 4.
 four = functools.partial(tuple_, n=4)
 
 
 @arbitrary
 def list_(of, min_length=0, max_length=1024):
-    """Generator for arbitrary lists. List elements themselves
-    can come from any arbitrary generator passed as first argument.
+    """Generators for arbitrary lists.
+
+    Parameters for this generator allow for adjusting the length
+    of resulting list and elements they contain.
+
+        :param of: Generator for list elements
+        :param min_length: A minimum length of list to generate
+        :param max_length: A maximum length of list to generate
+
+    Example of test property using :func:`list_`::
+
+        @qc
+        def calculating_average(
+            l=list_(of=int_(min=0, max=1024),
+                    min_length=16, max_length=2048)
+        ):
+            average = sum(l) / len(l)
+            assert min(l) <= average <= max(l)
     """
     length = random.randint(min_length, max_length)
     if is_arbitrary(of):
@@ -85,8 +152,24 @@ def list_(of, min_length=0, max_length=1024):
 @arbitrary
 def dict_(keys=None, values=None, items=None,
           min_length=0, max_length=1024):
-    """Generator for arbitrary dictionaries. Either `keys` and `values`,
-    or the `items` argument must be provided - but not both.
+    """Generator for arbitrary dictionaries.
+
+    Dictionaries are specified using generators - either for
+    :param:`keys` and :param:`values` separately::
+
+        dict_(keys=str_(max_length=64), values=str_(max_length=64))
+
+    or already combined into :param:`items` (which should yield
+    key-value pairs)::
+
+        dict_(items=two(str_(max_length=64)))
+
+    Those two styles arem utually exclusive, though.
+
+        :param min_length: A minimum number of items
+                           the resulting dictionary will contain
+        :param max_length: A maximum number of items
+                           the resulting dictionary will contain
     """
     kv_provided = keys is not None and values is not None
     items_provided = items is not None
