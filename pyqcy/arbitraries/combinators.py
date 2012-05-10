@@ -58,7 +58,13 @@ def data(schema):
     """Generator that outputs data structures conforming to given schema.
 
     :param schema: A list of dictionary that contains either
-                   immediate values or other generators
+                   immediate values or other generators.
+
+    .. note::
+
+       `schema` can be recursive and combine lists with dictionaries
+       into complex structures. You can have nested dictionaries,
+       lists containing lists, dictionaries with lists as values, and so on.
 
     A typical example of using `data`:
 
@@ -159,9 +165,15 @@ def combinator(func):
 def elements(*args):
     """Generator that returns a random element from given set.
 
-    Elements can be passed either directly as arguments (`elements(1, 2, 3)`)
-    or as a list (`elements([1, 2, 3])`). Every element has equal probability
-    of being chosen.
+    Elements can be passed either directly as arguments::
+
+        elements(1, 2, 3)
+
+    or as a list::
+
+        elements([1, 2, 3]) 
+
+    Every element has equal probability of being chosen.
     """
     if not args:
         raise ValueError("cannot pick random element from empty sequence")
@@ -172,11 +184,17 @@ def elements(*args):
 def one_of(*args):
     """Generator that yields values coming from given set of generators.
 
-    Generators can be passed either directly as arguments
-    (`one_of(int, float)`) or as a list (`one_of([int, float])`).
-    Every generator has equal probability of being chosen;
-    to use a non-uniform probability distribution use
-    the :func:`frequency` function.
+    Generators can be passed either directly as arguments::
+
+        one_of(int, float)
+
+    or as a list::
+
+        one_of([int, float])
+
+    Every generator has equal probability of being chosen.
+    If you need to have a non-uniform probability distribution,
+    use the :func:`frequency` function.
     """
     if not args:
         raise ValueError("no generators to choose from")
@@ -202,7 +220,8 @@ def frequency(*args):
     generators. In both examples above the resulting generator will
     yield `float`\ s twice as often as `int`\ s.
 
-    Typically, it's convenient to use frequencies that sum to 1 or 100.
+    Typically, it's convenient to use floating-point frequencies
+    that sum to 1.0 or integer frequencies that sum to 100.
     """
     if not args:
         raise ValueError("no generators to choose from")

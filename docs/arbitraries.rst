@@ -2,10 +2,14 @@ Using generators
 ================
 
 
-Simple built-in types
----------------------
+Built-in types
+**************
 
 .. currentmodule:: pyqcy.arbitraries.standard
+
+
+Scalar types
+------------
 
 .. autofunction:: int_(min, max)
 
@@ -16,10 +20,8 @@ Simple built-in types
 .. autofunction:: str_(of, min_length, max_length)
 
 
-Collection types
-----------------
-
-.. currentmodule:: pyqcy.arbitraries.standard
+Tuples
+------
 
 .. autofunction:: tuple_(*generators, of, n)
 
@@ -29,22 +31,34 @@ Collection types
 
 .. autofunction:: four(of)
 
+
+Collections
+-----------
+
 .. autofunction:: list_(of, min_length, max_length)
 
 .. autofunction:: dict_(keys, values, items, min_length, max_length)
 
 
 Combinators
------------
+***********
 
 .. currentmodule:: pyqcy.arbitraries.combinators
-
-.. autofunction:: elements(list)
 
 .. autofunction:: one_of(*generators)
 
 .. autofunction:: frequency(*distribution)
 
-.. autofunction:: apply
+.. autofunction:: elements(*list)
+
+
+Data structures
+---------------
 
 .. autofunction:: data
+
+
+Applying functions
+------------------
+
+.. autofunction:: apply
