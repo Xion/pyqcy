@@ -22,6 +22,7 @@ class arbitrary(object):
 
     def __call__(self, func):
         """Applies the @arbitrary decorator to given function.
+
         If `type` argument was supplied previously,
         the resulting generator will be remembered in global registry
         for easy reference.
@@ -81,8 +82,11 @@ class arbitrary(object):
 
 def is_arbitrary(obj):
     """Checks whether given object can work as generator of arbitrary values.
+
     This functions handles all the forms in which arbitraries can occur
     in the code, including: generators, generator functions, and types.
+
+    :param obj: Object to be checked
     """
     if inspect.isgenerator(obj):
         return True
@@ -95,9 +99,19 @@ def is_arbitrary(obj):
 
 def to_arbitrary(obj):
     """Ensures that given object is a generator of arbitrary values.
+
     Rather than permitting only actual generators, this allows
     us to pass generator functions or even types, provided
     there is a known arbitrary generator for them.
+
+    :param obj: Object to be coerced into arbitrary generator,
+                if it's possible and the object is not already one
+
+    Raises :exc:`TypeError` if `obj` is a type and no default
+    generator for this type has been found.
+
+    Raises :exc:`ValueError` if `obj` cannot be reasonably
+    coerced into a generator of arbitrary values.
     """
     if inspect.isgenerator(obj):
         return obj
