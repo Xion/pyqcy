@@ -57,19 +57,9 @@ Learn more
 ----------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    Defining properties <properties>
    Using generators <arbitraries>
    Gathering statistics <statistics>
    Running the tests <running>
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-

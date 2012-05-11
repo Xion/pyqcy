@@ -13,7 +13,8 @@ Test runner
 
 *pyqcy* includes a readily available test runner which can be used to run verification
 tests for all properties defined within given module. For it to work, you just need
-to include a traditional `if __name__ == '__main__':` boilerplate which calls `pyqcy.main`:
+to include a traditional `if __name__ == '__main__':` boilerplate which calls
+:func:`pyqcy.main`:
 
 .. code-block:: python
 
@@ -40,9 +41,9 @@ If you are already using a framework for running unit tests against your project
 you can probably integrate *pyqcy* property tests into it in very easy way.
 
 For the purposes of such integration, *pyqcy* defines the :class:`TestCase` class
-that is a direct descendant from the standard `unittest.TestCase`. Because of that,
+that is a direct descendant from the standard :class:`unittest.TestCase`. Because of that,
 test cases built upon it will be gathered and ran by pretty much any testing framework
-- be it `unittest` itself, *nose*, *py.test*, etc.
+- be it :mod:`unittest` itself, *nose*, *py.test*, etc.
 
 Therefore all we need to do for our properties to be picked up is to put them inside
 a :class:`TestCase` subclass::
