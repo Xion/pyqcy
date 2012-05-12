@@ -38,10 +38,20 @@ def collect(value):
 
         @qc
         def sort_works(
-            l=list_(int, min_length=1, max_length=64)
+            l=list_(int, min_length=1, max_length=100)
         ):
             yield collect(len(l))
             assert list(sorted(l))[0] = min(l)
+
+    Checking the above property will produce output similar to this:
+
+    .. code-block:: console
+
+        sort_works: passed 100 tests.
+        1.00%: 1
+        1.00%: 2
+        ...
+        1.00%: 100
     """
     return Tag(value)
 
@@ -64,10 +74,22 @@ def classify(condition, label):
     .. code-block:: python
 
         @qc
-        def sort_preserves_length(l=list_(int, max_length=64)):
+        def sort_preserves_length(
+            l=list_(int, min_length=1, max_length=100)
+        ):
             yield classify(len(l) == 0, "empty list")
             yield classify(len(l) < 10, "short list")
             assert len(list(sorted(l))) == len(l)
+
+    Checking the above property will produce
+    something like the following output:
+
+    .. code-block::  console
+
+        sort_preserves_length: passed 100 tests.
+        1.00%: empty list, short list
+        9.00%: short list
+        90.00%: <rest>
     """
     satisfied = condition() if callable(condition) else bool(condition)
     return Tag(label) if satisfied else None

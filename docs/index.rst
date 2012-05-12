@@ -61,5 +61,5 @@ Learn more
 
    Defining properties <properties>
    Using generators <arbitraries>
-   Gathering statistics <statistics>
    Running the tests <running>
+   Gathering statistics <statistics>
