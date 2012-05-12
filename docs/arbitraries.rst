@@ -116,6 +116,13 @@ Combinators
 
 .. currentmodule:: pyqcy.arbitraries.combinators
 
+If you want to have a generator that produces values of more than one type,
+use the simple :func:`one_of` function or the more sophisticated
+:func:`frequency` combinator.
+
+For a simpler task of always choosing a value from a predefined
+set of objects, the :func:`elements` function will come handy.
+
 .. autofunction:: one_of(*generators)
 
 .. autofunction:: frequency(*distribution)
@@ -128,10 +135,19 @@ Combinators
 Data structures
 ---------------
 
+For testing higher level code, it is often required to prepare more complex
+input data and not just simple, uniform collections of elements. Even then,
+it can be possible to avoid writing a custom generator if we use the
+:func:`data` function.
+
 .. autofunction:: data
 
 
 Applying functions
 ------------------
+
+Yet another way of combining generators is to use them as building blocks
+for whole object *pipelines*. This is possible thanks to :func:`apply`
+combinator.
 
 .. autofunction:: apply

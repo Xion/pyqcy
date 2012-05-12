@@ -57,7 +57,7 @@ def apply(func, *args, **kwargs):
 def data(schema):
     """Generator that outputs data structures conforming to given schema.
 
-    :param schema: A list of dictionary that contains either
+    :param schema: A list or dictionary that contains either
                    immediate values or other generators.
 
     .. note::
