@@ -52,9 +52,12 @@ See the _tests_ package for more usage examples.
 
 ## How far does it go?
 
-Although quite functional (pun likely intended), the project is in experimental phase.
-The aim is to make it very similar to Haskell's _QuickCheck_, in extent
-permitted by the dynamic nature of Python.
+Check out [the docs](http://pyqcy.readthedocs.org) for comprehensive explanation
+of features currently offered by _pyqcy_.
+
+The aim of this project is to make it very similar to Haskell's _QuickCheck_,
+in extent permitted by the dynamic nature of Python. So far it turned out to be
+quite big extent :)
 
 ## Cool! Can I help?
 

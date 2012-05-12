@@ -18,9 +18,7 @@ in fact!
 How does it look like?
 ----------------------
 
-For starters, try this:
-
-::
+For starters, try this::
 
     from pyqcy import qc, int_, main
 
@@ -56,10 +54,8 @@ Hey, I like it!
 Then check these links to find out more:
 
 * `website <http://xion.github.com/pyqcy>`_
+* `documentation <http://pyqcy.readthedocs.org>`_
 * `github <http://github.com/Xion/pyqcy>`_
-* `development version
-    <http://github.com/Xion/pyqcy/zipball/master#egg=pyqcy>`_
-
 """
 from setuptools import setup, find_packages
 
