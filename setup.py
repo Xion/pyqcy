@@ -63,10 +63,12 @@ Then check these links to find out more:
 """
 from setuptools import setup, find_packages
 
+import pyqcy
+
 
 setup(
     name="pyqcy",
-    version="0.3.1",
+    version=pyqcy.__version__,
     description="QuickCheck-like testing framework for Python",
     long_description=__doc__,
     author='Karol Kuczmarski "Xion"',
