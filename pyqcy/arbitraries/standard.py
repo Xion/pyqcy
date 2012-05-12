@@ -130,7 +130,7 @@ four = functools.partial(tuple_, n=4)
 
 @arbitrary
 def list_(of, min_length=0, max_length=1024):
-    """Generators for arbitrary lists.
+    """Generator for arbitrary lists.
 
     Parameters for this generator allow for adjusting the length
     of resulting list and elements they contain.
