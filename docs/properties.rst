@@ -29,4 +29,8 @@ and then invoke your property's code.
 	check the :doc:`documentation on that <running>`.
 
 
-.. autofunction:: pyqcy.qc()
+.. autofunction:: pyqcy.qc([tests])
+
+	:param tests: Number of tests to execute for this property.
+				  If omitted, the default number of 100 tests will be executed.
+				  

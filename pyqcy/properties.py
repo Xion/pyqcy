@@ -13,13 +13,11 @@ from pyqcy.utils import optional_args
 __all__ = ['qc']
 
 
-DEFAULT_TEST_COUNT = 100
-
-
 class Property(object):
     """A property that can be QuickChecked."""
+    tests_count = 100   # used if not overridden on per-property basis
 
-    def __init__(self, args, kwargs, func):
+    def __init__(self, args, kwargs, func, tests_count=None):
         """Constructor. Callers should specify the function
         which encodes the testing property, and arbitrary values'
         generator for both positonal and keyword arguments.
@@ -29,6 +27,8 @@ class Property(object):
         self.kwargs = dict((k, to_arbitrary(v) if is_arbitrary else v)
                            for k, v in kwargs.iteritems())
         self.func = self.__coerce_to_generator_func(func)
+        if tests_count is not None:
+            self.tests_count = tests_count
 
     def __coerce_to_generator_func(self, func):
         """Ensures that given function is a generator function,
@@ -45,12 +45,19 @@ class Property(object):
             yield
         return generator_func
 
-    def test(self, count=DEFAULT_TEST_COUNT):
+    def test(self, count=None):
         """Executes given number of tests for this property
         and gathers statistics about all test runs.
+
+        :param count: Number of tests to execute.
+                      If omitted, the default number of tests
+                      for this property is executed.
+
         Returns a list containing a set of "tags"
         for each test case that was executed.
         """
+        if count is None:
+            count = self.tests_count
         if not (count > 0):
             raise ValueError("test count must be positive")
         return [self.test_one() for _ in xrange(count)]
@@ -116,7 +123,8 @@ class Property(object):
         curried_args = self.args[len(args):]
         curried_kwargs = dict((k, v) for (k, v) in self.kwargs.iteritems()
                                if k not in kwargs)
-        return Property(curried_args, curried_kwargs, curried_func)
+        return Property(curried_args, curried_kwargs, curried_func,
+                        self.tests_count)
 
 
 # The @qc decorator
@@ -140,8 +148,8 @@ class qc(object):
             assert len(l) == l.__len__()
 
     """
-    def __init__(self):
-        pass  # argumentless, for now
+    def __init__(self, tests=None):
+        self.tests_count = tests
 
     def __call__(self, func):
         """Applies the @qc decorator to given function,
@@ -153,4 +161,5 @@ class qc(object):
         if free_args_count > 0:
             raise TypeError("property has unbound variables: %s" %
                 func_args[:free_args_count])
-        return Property(args=func_defaults, kwargs={}, func=func)
+        return Property(args=func_defaults, kwargs={}, func=func,
+                        tests_count=self.tests_count)

@@ -5,7 +5,7 @@ import sys
 import os
 import traceback
 
-from .properties import Property, DEFAULT_TEST_COUNT
+from .properties import Property
 from .utils import partition
 
 
@@ -64,8 +64,8 @@ def print_test_results(prop, results):
     has generated though `yield` statements.
     """
     print "%s: passed %s test%s." % (prop.func.__name__,
-        DEFAULT_TEST_COUNT,
-        "s" if DEFAULT_TEST_COUNT != 1 else "")
+        prop.tests_count,
+        "s" if prop.tests_count != 1 else "")
 
     # gather and display statistics
     with_stats, without_stats = partition(lambda r: len(r) > 0,
