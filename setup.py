@@ -53,7 +53,7 @@ Hey, I like it!
 
 Then check these links to find out more:
 
-* `website <http://xion.github.com/pyqcy>`_
+* `website <http://xion.io/pyqcy>`_
 * `documentation <http://pyqcy.readthedocs.org>`_
 * `github <http://github.com/Xion/pyqcy>`_
 """
@@ -69,7 +69,7 @@ setup(
     long_description=__doc__,
     author='Karol Kuczmarski "Xion"',
     author_email="karol.kuczmarski@gmail.com",
-    url="http://xion.github.com/pyqcy",
+    url="http://xion.io/pyqcy",
     license="Simplified BSD",
 
     classifiers=[
