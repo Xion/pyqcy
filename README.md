@@ -48,8 +48,6 @@ has support for most Python types, including strings and lists.
 Futhermore it also allows you to define your own generators
 using the <code>@arbitrary</code> decorator.
 
-See the _tests_ package for more usage examples.
-
 ## How far does it go?
 
 Check out [the docs](http://pyqcy.readthedocs.org) for comprehensive explanation
