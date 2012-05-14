@@ -15,7 +15,7 @@ Example
 
 .. code-block:: python
 
-    from pyqcy import qc, int_ main
+    from pyqcy import qc, int_, main
 
     @qc
     def addition_actually_works(
