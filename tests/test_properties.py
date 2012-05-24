@@ -15,14 +15,13 @@ class Properties(unittest.TestCase):
         subtraction_doesnt_break.test()
 
     def test_failing_property(self):
-        results = failing.test()
-        assert not all(r.succeeded for r in results)
+        self.assertRaises(AssertionError, failing.test)
 
     def test_parametrized_property(self):
-        assert adding_to(x=5).test()
+        adding_to(x=5).test()
 
     def test_number_of_tests_in_decorator(self):
-        results = multiplication_works.test()
+        results = multiplication_works.check()
         assert len(results) == multiplication_works.tests_count
         assert len(results) == CUSTOM_TESTS_COUNT
 

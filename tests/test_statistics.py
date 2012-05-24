@@ -9,11 +9,11 @@ class Statistics(unittest.TestCase):
     """Test cases for statistics functionality."""
 
     def test_collect(self):
-        results = sorting_short_lists.test()
+        results = sorting_short_lists.check()
         assert all(len(r.tags) > 0 for r in results)
 
     def test_classify(self):
-        results = sort_preserves_length.test()
+        results = sort_preserves_length.check()
         assert any(len(r.tags) > 0 for r in results)
 
 

@@ -81,7 +81,7 @@ class Property(object):
             yield
         return generator_func
 
-    def test(self, count=None):
+    def check(self, count=None):
         """Executes given number of tests for this property
         and gathers statistics about all test runs.
 
@@ -97,6 +97,25 @@ class Property(object):
         if not (count > 0):
             raise ValueError("test count must be positive")
         return [self.test_one() for _ in xrange(count)]
+
+    def test(self, count=None):
+        """Executes given number of tests for this property
+        and checks whether they all pass. This is a simplified
+        version of :meth:`check` method which discards
+        any statistics generated during test runs.
+
+        :param count: Number of tests to execute.
+                      If omitted, the default number of tests
+                      for this property is executed.
+
+        Returns True if all tests passed. Otherwise,
+        re-raises the exception which caused a test to fail.
+        """
+        results = self.check(count)
+        failure = next((r for r in results if not r.succeeded), None)
+        if failure:
+            failure.propagate_failure()
+        return True
 
     def test_one(self):
         """Executes a single test for this property."""
@@ -167,9 +186,13 @@ class TestResult(object):
         self.data = data
         self.tags = []
 
-    def register_failure(self):
-        _, self.exception, self.traceback = sys.exc_info()
-
     @property
     def succeeded(self):
         return getattr(self, 'exception', None) is None
+
+    def register_failure(self):
+        _, self.exception, self.traceback = sys.exc_info()
+
+    def propagate_failure(self):
+        # This form of 'raise' ensures the original traceback is preserved
+        raise type(self.exception), self.exception, self.traceback

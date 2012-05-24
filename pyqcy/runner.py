@@ -42,24 +42,26 @@ def run_tests(props, failfast=False, propagate_exc=False):
     success = True
 
     for p in props:
-        results = p.test()
+        results = p.check()
         failed = [r for r in results if not r.succeeded]
         if failed:
+            failure = failed[0]
+
             print "%s: failed (only %s out of %s tests passed)." % (
                 p.func.__name__, len(successful), p.tests_count)
             print "Failure encountered for:"
-            for k, arg in failed[0].data.iteritems():
+            for k, arg in failure.data.iteritems():
                 "  %s = %s" % (k, repr(arg))
 
             print "Exception:"
-            traceback.print_exception(type(failed.exception),
-                failed.exception, failed.traceback)
+            traceback.print_exception(type(failure.exception),
+                failure.exception, failure.traceback)
 
             success = False
             if failfast:
                 break
             if propagate_exc:
-                raise result.exception
+                failure.propagate_failure()
         else:
             tags = (r.tags for r in results)
             print_test_results(p, tags)
