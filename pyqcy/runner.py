@@ -5,7 +5,7 @@ import sys
 import os
 import traceback
 
-from .properties import Property
+from .properties import Property, TestResult
 from .utils import partition
 
 
@@ -43,20 +43,18 @@ def run_tests(props, failfast=False, propagate_exc=False):
 
     for p in props:
         results = p.test()
-        failed = next((r for r in results if not r.succeeded), None)
+        failed = [r for r in results if not r.succeeded]
         if failed:
-            print "%s: failed." % p.func.__name__
-            if failed.args:
-                print "Arguments:"
-                for arg in failed.args:
-                    print "  %s" % repr(arg)
-            if failed.kwargs:
-                print "Keyword arguments:"
-                for k, arg in failed.kwargs.iteritems():
-                    "  %s = %s" % (k, repr(arg))
+            print "%s: failed (only %s out of %s tests passed)." % (
+                p.func.__name__, len(successful), p.tests_count)
+            print "Failure encountered for:"
+            for k, arg in failed[0].data.iteritems():
+                "  %s = %s" % (k, repr(arg))
 
+            print "Exception:"
             traceback.print_exception(type(failed.exception),
                 failed.exception, failed.traceback)
+
             success = False
             if failfast:
                 break

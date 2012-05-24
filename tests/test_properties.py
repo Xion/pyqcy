@@ -19,7 +19,7 @@ class Properties(unittest.TestCase):
         assert not all(r.succeeded for r in results)
 
     def test_parametrized_property(self):
-        assert adding_to(5).test()
+        assert adding_to(x=5).test()
 
     def test_number_of_tests_in_decorator(self):
         results = multiplication_works.test()
