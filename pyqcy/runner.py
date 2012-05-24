@@ -42,18 +42,29 @@ def run_tests(props, failfast=False, propagate_exc=False):
     success = True
 
     for p in props:
-        try:
-            results = p.test()
-        except:
+        results = p.test()
+        failed = next((r for r in results if not r.succeeded), None)
+        if failed:
             print "%s: failed." % p.func.__name__
-            traceback.print_exception(*sys.exc_info())
+            if failed.args:
+                print "Arguments:"
+                for arg in failed.args:
+                    print "  %s" % repr(arg)
+            if failed.kwargs:
+                print "Keyword arguments:"
+                for k, arg in failed.kwargs.iteritems():
+                    "  %s = %s" % (k, repr(arg))
+
+            traceback.print_exception(type(failed.exception),
+                failed.exception, failed.traceback)
             success = False
             if failfast:
                 break
             if propagate_exc:
-                raise
+                raise result.exception
         else:
-            print_test_results(p, results)
+            tags = (r.tags for r in results)
+            print_test_results(p, tags)
 
     return success
 
@@ -69,7 +80,7 @@ def print_test_results(prop, results):
 
     # gather and display statistics
     with_stats, without_stats = partition(lambda r: len(r) > 0,
-                                          results)
+                                          list(results))
     if len(with_stats) > 0:
         stats = {}
         for s in with_stats:

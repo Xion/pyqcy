@@ -10,11 +10,11 @@ class Statistics(unittest.TestCase):
 
     def test_collect(self):
         results = sorting_short_lists.test()
-        assert all(len(r) > 0 for r in results)
+        assert all(len(r.tags) > 0 for r in results)
 
     def test_classify(self):
         results = sort_preserves_length.test()
-        assert any(len(r) > 0 for r in results)
+        assert any(len(r.tags) > 0 for r in results)
 
 
 # Test properties

@@ -15,7 +15,8 @@ class Properties(unittest.TestCase):
         subtraction_doesnt_break.test()
 
     def test_failing_property(self):
-        self.assertRaises(AssertionError, failing.test)
+        results = failing.test()
+        assert not all(r.succeeded for r in results)
 
     def test_parametrized_property(self):
         assert adding_to(5).test()
@@ -34,7 +35,7 @@ def subtraction_doesnt_break(x=int, y=int):
 
 
 @qc
-def failing():
+def failing(a=int, b=int):
     assert False
 
 
