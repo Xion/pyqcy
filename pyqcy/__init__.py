@@ -8,6 +8,7 @@ __license__ = "BSD"
 
 from .arbitraries import *
 from .properties import *
+from .results import *
 from .statistics import *
 
 from .integration import *

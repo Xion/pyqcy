@@ -5,8 +5,9 @@ import sys
 import os
 import traceback
 
-from .properties import Property, TestResult
-from .utils import partition
+from pyqcy.properties import Property
+from pyqcy.results import TestResult
+from pyqcy.utils import partition
 
 
 __all__ = ['main']

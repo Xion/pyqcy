@@ -15,7 +15,7 @@ class Properties(unittest.TestCase):
         subtraction_doesnt_break.test()
 
     def test_failing_property(self):
-        self.assertRaises(AssertionError, failing.test)
+        self.assertRaises(CheckError, failing.test)
 
     def test_parametrized_property(self):
         adding_to(x=5).test()
