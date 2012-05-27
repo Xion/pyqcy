@@ -50,7 +50,7 @@ def run_tests(props, failfast=False, propagate_exc=False):
 
             print "%s: failed (only %s out of %s tests passed)." % (
                 p.func.__name__, len(successful), p.tests_count)
-            print "Failure encountered for:"
+            print "Failure encountered for data:"
             for k, arg in failure.data.iteritems():
                 "  %s = %s" % (k, repr(arg))
 

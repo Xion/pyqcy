@@ -21,7 +21,7 @@ class CheckError(Exception):
 
         res = [msg]
         res.append("Failure encountered for data:")
-        res.extend("  %s: %s" % i for i in self.test_data.iteritems())
+        res.extend("  %s = %s" % i for i in self.test_data.iteritems())
         return os.linesep.join(res)
 
 
