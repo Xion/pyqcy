@@ -27,6 +27,7 @@ class Arbitraries(unittest.TestCase):
 
     def test_regex_arbitrary(self):
         pattern_is_a_pattern.test()
+        email_is_email.test()
 
     def test_standard_nested_arbitrary(self):
         sort_finds_minimum.test()
@@ -111,6 +112,12 @@ def case_transform_on_unicode(
 def pattern_is_a_pattern(s=regex(r'\d+')):
     assert len(s) > 0
     assert all(c in string.digits for c in s)
+
+
+@qc
+def email_is_email(s=email()):
+    assert '@' in s
+    assert s.rfind('.') > s.find('@') # at least one dot after @
 
 
 @qc

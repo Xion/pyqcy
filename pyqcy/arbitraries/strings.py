@@ -49,6 +49,14 @@ def unicode_(of=int_(min=0, max=65535), min_length=1, max_length=64):
     return u''.join(char(random.choice(of)) for _ in xrange(length))
 
 
+# Common patterns
+
+@arbitrary(str)
+def email():
+	"""Generator of arbitrary email addresses."""
+	return next(regex(r'[\w\d\.\+]+@[\w\d]+(\.[\w\d]+)+'))
+
+
 # Regular expressions
 
 @arbitrary(str)
@@ -83,16 +91,16 @@ def regex(pattern):
 					return random.choice(string.digits)
 				if in_data == 'category_space':
 					return ' '
-			return generate_node_match(what)
+			return generate_node_match((in_type, in_data))
 
 		if type_ in ['min_repeat', 'max_repeat']:
 			min_count, max_count, [what] = data
-			count = random.randint(min_count, max_count)
+			count = random.randint(min_count, min(max_count, 64))
 			return generate_node_match(what) * count
 
 		if type_ == 'subpattern':
 			_, inner = data 	# first item is subpattern index
-			return generate_node_match(inner)
+			return ''.join(map(generate_node_match, inner))
 
 		# TODO: add support for the rest of regex syntax elements
 		raise ValueError("unsupported regular expression element: %s", type_)
