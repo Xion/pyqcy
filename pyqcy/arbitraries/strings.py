@@ -108,11 +108,10 @@ class regex(object):
 		from the regular expression AST. Such node is an alternative
 		between several variants.
 		"""
-		# TODO: add support for negation: [^...]
 		chosen = random.choice(node_data)
 		type_, data = chosen
 
-		if type_ == 'range':
+		if type_ == 'range': # TODO: add support for negation: [^...]
 			min_char, max_char = data
 			return chr(random.randint(min_char, max_char))
 		if type_ == 'category':
@@ -125,15 +124,17 @@ class regex(object):
 		from the regular expression AST. Such node specifies
 		a particular kind of characters, like letters or whitespace.
 		"""
-		type_ = node_data
+		type_ = node_data[node_data.rfind('_') + 1:]
+		negate = '_not_' in node_data
 
-		# TODO: support more categories
-		if type_ == 'category_word':
-			return random.choice(string.ascii_letters)
-		if type_ == 'category_digit':
-			return random.choice(string.digits)
-		if type_ == 'category_space':
-			return ' '
+		charsets = {
+			'word': string.ascii_letters,
+			'digit': string.digits,
+			'space': string.whitespace
+		}
+		charset = (set(string.printable) - set(charsets[type_])
+				   if negate else charsets[type_])
+		return random.choice(charset)
 
 	def __reverse_repeat_node(self, node_data):
 		"""Generates a string that matches 'min_repeat' or 'max_repeat' node
@@ -149,5 +150,6 @@ class regex(object):
 		from the regular expression AST. Subpattern specifies
 		a (capture) group defined within the regex.
 		"""
-		_, inner = node_data 	# first element is group index; unused for now
+		# TODO: add support for backreferences to capture groups
+		_, inner = node_data 	# first element is group index
 		return ''.join(self.__reverse_node(node) for node in inner)
