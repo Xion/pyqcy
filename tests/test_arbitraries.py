@@ -2,10 +2,12 @@
 Unit tests for arbitraries.
 """
 import unittest
-from pyqcy import *
 
 import random
 import json
+import string
+
+from pyqcy import *
 
 
 class Arbitraries(unittest.TestCase):
@@ -22,6 +24,9 @@ class Arbitraries(unittest.TestCase):
 
     def test_unicode_arbitrary(self):
         case_transform_on_unicode.test()
+
+    def test_regex_arbitrary(self):
+        pattern_is_a_pattern.test()
 
     def test_standard_nested_arbitrary(self):
         sort_finds_minimum.test()
@@ -100,6 +105,12 @@ def case_transform_on_unicode(
     s=unicode_(min_length=2, max_length=128)
 ):
     assert s.upper() == s.upper().upper()
+
+
+@qc
+def pattern_is_a_pattern(s=regex(r'\d+')):
+    assert len(s) > 0
+    assert all(c in string.digits for c in s)
 
 
 @qc
