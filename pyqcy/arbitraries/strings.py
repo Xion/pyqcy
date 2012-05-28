@@ -6,7 +6,7 @@ import re
 import string
 
 from pyqcy.arbitraries import arbitrary, is_arbitrary
-from pyqcy.arbitraries.standard import int_
+from pyqcy.arbitraries.numbers import int_
 
 
 @arbitrary(str)
