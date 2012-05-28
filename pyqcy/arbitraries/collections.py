@@ -1,82 +1,11 @@
 """
-Arbitrary values generators
-for standard Python types.
+Generators for arbitrary collections (tuples, lists, dictionaries).
 """
-import sys
 import random
 import functools
 
 from pyqcy.arbitraries import arbitrary, is_arbitrary
 
-
-# Arbitrary values' generators for built-in scalar types
-
-@arbitrary(int)
-def int_(min=-sys.maxint - 1, max=sys.maxint):
-    """Generator for arbitrary integers.
-
-    By default, it generates value from the whole range
-    supported by the system but this can be adjusted using
-    parameters.
-
-    :param min: A minimum value of integer to generate
-    :param max: A maximum value of integer to generate
-    """
-    return random.randint(min, max)
-
-
-@arbitrary(float)
-def float_(min=-float(sys.maxint), max=float(sys.maxint)):
-    """Generator for arbitrary floats.
-
-    :param min: A minimum value of float to generate
-    :param max: A maximum value of float to generate
-    """
-    return min + random.random() * (max - min)
-
-
-@arbitrary(complex)
-def complex_(min_real=-float(sys.maxint), max_real=float(sys.maxint),
-             min_imag=-float(sys.maxint), max_imag=float(sys.maxint)):
-    """Generator for arbitrary complex numbers
-    of the built-in Python complex type.
-
-    Parameters for this generator allow for adjusting the rectangle
-    on the complex plane where the values will come from.
-
-    :param min_real: A minimum value for real part of generated numbers
-    :param max_real: A maximum value for real part of generated numbers
-    :param min_imag: A minimum value for the imaginary part
-                     of generated numbers
-    :param max_imag: A maximum value for the imaginary part
-                     of generated numbers
-    """
-    reals = float_(min_real, max_real)
-    imags = float_(min_imag, max_imag)
-    return complex(next(reals), next(imags))
-
-
-@arbitrary(str)
-def str_(of=int_(min=0, max=255), min_length=1, max_length=64):
-    """Generator for arbitrary strings.
-
-    Parameters for this generator allow for adjusting the length
-    of resulting strings and the set of characters they are composed of.
-
-    :param of: Characters used to construct the strings.
-               This can be either an iterable of characters
-               (e.g. a string) or a generator that produces them.
-    :param min_length: A minimum length of string to generate
-    :param max_length: A maximum length of string to generate
-    """
-    length = random.randint(min_length, max_length)
-    char = lambda ch: ch if isinstance(ch, basestring) else chr(ch)
-    if is_arbitrary(of):
-        return ''.join(char(next(of)) for _ in xrange(length))
-    return ''.join(char(random.choice(of)) for _ in xrange(length))
-
-
-# Arbitrary values' generators for built-in collection types
 
 @arbitrary
 def tuple_(*args, **kwargs):

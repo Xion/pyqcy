@@ -157,5 +157,8 @@ def to_arbitrary(obj):
             obj, type(obj).__name__))
 
 
-from .standard import *
+from .numbers import *
+from .strings import *
+from .collections import *
+
 from .combinators import *

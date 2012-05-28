@@ -1,6 +1,8 @@
 """
 Combinators for generators of arbitrary values.
 """
+from __future__ import absolute_import
+
 import functools
 import inspect
 import random
