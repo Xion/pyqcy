@@ -64,26 +64,27 @@ class arbitrary(object):
         gen_func._arbitrary = True  # marker attribute
         return gen_func
 
-    def __arbitrary_generator(self, func, value_func=None):
-        """Constructs arbitrary generator based on given function `func`.
-        It can be both a function that returns a single value,
-        or a generator function.
+    def __arbitrary_generator(self, gen, value_func=None):
+        """Constructs arbitrary generator based on given object.
+        It can be a function that returns a single value,
+        a generator function (that uses `yield`) or a generator class
+        (with `__iter__` and `next` methods).
         """
         if value_func is None:
             value_func = lambda v: v  # identity function
 
-        if inspect.isgeneratorfunction(func):
-            @functools.wraps(func)
+        if inspect.isgeneratorfunction(gen) or inspect.isclass(gen):
+            @functools.wraps(gen)
             def wrapper(*args, **kwargs):
                 args, kwargs = self.__coerce_to_arbitraries(args, kwargs)
-                for obj in func(*args, **kwargs):
+                for obj in gen(*args, **kwargs):
                     yield value_func(obj)
         else:
-            @functools.wraps(func)
+            @functools.wraps(gen)
             def wrapper(*args, **kwargs):
                 args, kwargs = self.__coerce_to_arbitraries(args, kwargs)
                 while True:
-                    yield value_func(func(*args, **kwargs))
+                    yield value_func(gen(*args, **kwargs))
 
         return wrapper
 
