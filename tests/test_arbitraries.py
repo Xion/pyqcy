@@ -20,6 +20,9 @@ class Arbitraries(unittest.TestCase):
     def test_standard_arbitrary_with_args(self):
         addition_works_for_positive_floats.test()
 
+    def test_unicode_arbitrary(self):
+        case_transform_on_unicode.test()
+
     def test_standard_nested_arbitrary(self):
         sort_finds_minimum.test()
 
@@ -90,6 +93,13 @@ def case_transform_preserves_length(
 ):
     assert len(s) == len(s.upper())
     assert len(s) == len(s.lower())
+
+
+@qc
+def case_transform_on_unicode(
+    s=unicode_(min_length=2, max_length=128)
+):
+    assert s.upper() == s.upper().upper()
 
 
 @qc

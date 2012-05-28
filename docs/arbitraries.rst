@@ -76,6 +76,8 @@ in this example:
 
 .. autofunction:: str_(of, min_length, max_length)
 
+.. autofunction:: unicode_(of, min_length, max_length)
+
 
 
 Tuples
