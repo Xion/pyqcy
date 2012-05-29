@@ -60,7 +60,7 @@ def email():
 @arbitrary(str)
 def ipv4():
     """Generator of arbitrary IPv4 addresses."""
-    return '.'.join(random.randint(0, 255) for _ in xrange(4))
+    return '.'.join(str(random.randint(0, 255)) for _ in xrange(4))
 
 
 @arbitrary(str)
@@ -107,7 +107,7 @@ class regex(object):
         if type_ == 'any':
             return next(self.__random_char)
 
-        if type_ == 'in': #
+        if type_ == 'in':
             return self.__reverse_in_node(data)
         if type_ in ['min_repeat', 'max_repeat']:
             return self.__reverse_repeat_node(data)
