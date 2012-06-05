@@ -84,7 +84,7 @@ class regex(object):
     """Generator for strings matching a regular expression.
 
     :param pattern: A regular expression - either a compiled one
-                    or string pattern
+                    (through :func:`re.compile`) or a string pattern
     """
     def __init__(self, pattern):
         if not isinstance(pattern, basestring):
