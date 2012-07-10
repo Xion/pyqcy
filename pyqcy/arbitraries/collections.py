@@ -12,12 +12,12 @@ def tuple_(*args, **kwargs):
     """Generator for arbitrary tuples.
 
     The tuples are always of the same length but their values
-    can come from different generators. There two ways to specify
+    may come from different generators. There two ways to specify
     those generators - either enumerate them all::
 
-        tuple_(int_(min=0, max=255), str_(max_length=64)) 
+        tuple_(int_(min=0, max=255), str_(max_length=64))
 
-    or use `n` argument with a single generator for uniform tuples::
+    or use ``n`` argument with a single generator to get uniform tuples::
 
         ip_addresses = tuple_(int_(min=0, max=255), n=4)
         ip_addresses = tuple_(of=int_(min=0, max=255), n=4)
@@ -90,11 +90,11 @@ def dict_(keys=None, values=None, items=None,
     """Generator for arbitrary dictionaries.
 
     Dictionaries are specified using generators - either for
-    `keys` and `values` separately::
+    ``keys`` and ``values`` separately::
 
         dict_(keys=str_(max_length=64), values=str_(max_length=64))
 
-    or already combined into `items` (which should yield key-value pairs)::
+    or already combined into ``items`` (which should yield key-value pairs)::
 
         dict_(items=two(str_(max_length=64)))
 

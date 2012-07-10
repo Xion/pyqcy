@@ -13,7 +13,7 @@ Test runner
 
 *pyqcy* includes a readily available test runner which can be used to run verification
 tests for all properties defined within given module. For it to work, you just need
-to include a traditional `if __name__ == '__main__':` boilerplate which calls
+to include a traditional ``if __name__ == '__main__':`` boilerplate which calls
 :func:`pyqcy.main`:
 
 .. code-block:: python
@@ -58,7 +58,7 @@ a :class:`TestCase` subclass::
         def subtraction_on_ints(x=int, y=int):
             assert isinstance(x - y, int)
 
-There is no need to rename the properties to start with `test_` but we should retain
+There is no need to rename the properties to start with ``test_`` but we should retain
 the :func:`qc` decorator. We also don't need to include any other methods to run
 our property tests explicitly; the base :class:`TestCase` class will take care of it
 automatically.

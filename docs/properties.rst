@@ -19,8 +19,8 @@ Here's an example:
 	    assert len(before_set) == len(after_sort)
 
 Inside the function, we use its parameters as a sort of **quantified variables**.
-As you can see, their defaults are somewhat unusual as they specify how to
-obtain *arbitrary* (i.e. random) values for those variables. *pyqcy* will take
+As you can see, their defaults are somewhat unusual: they specify how to
+obtain *arbitrary* (random) values for those variables. *pyqcy* will take
 those :doc:`specifications <arbitraries>`, use them to automatically generate test data
 and then invoke your property's code.
 

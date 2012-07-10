@@ -11,7 +11,7 @@ from collections import Iterable, Mapping
 try:
     from collections import OrderedDict
 except ImportError:
-    OrderedDict = dict # fallback for Python 2.6
+    OrderedDict = dict  # fallback for Python 2.6
 
 from pyqcy.arbitraries import arbitrary, is_arbitrary, to_arbitrary
 from pyqcy.utils import recursive
@@ -22,24 +22,25 @@ def apply(func, *args, **kwargs):
     by given generator(s).
 
     Any number of generators can be passed as arguments, and they can
-    be both positional (`args`) or keyword arguments (`kwargs`).
-    In any case, the same invocation style (i.e. positional or keyword)
-    will be used when calling the `func` with actual values
-    obtained from generators.
+    be both positional (``args``) or keyword arguments (``kwargs``).
+    In either case, the same invocation style (i.e. positional or keyword)
+    will be used when calling the ``func`` with actual values
+    obtained from given generators.
 
     As an example, the following call::
 
         apply(json.dumps, dict_(items=two(str)))
 
-    will create a generator that yields results of `json.dumps(d)` invocations,
-    where `d` is an arbitrary dictionary that maps strings to strings.
+    will create a generator that yields results of ``json.dumps(d)``,
+    where ``d`` is an arbitrary dictionary that maps strings to strings.
 
-    Similarly, using `apply` as shown below::
+    Similarly, using :func:`apply` as shown below::
 
         apply(itertools.product, list_(of=int), repeat=4)
 
     gets us a generator that produces results of
-    `itertools.product(l, repeat=4)`, where `l` is an arbitrary list of `int`\ s.
+    ``itertools.product(l, repeat=4)``, where ``l`` is an arbitrary
+    list of ``int``\ s.
     """
     if not func:
         raise ValueError("no function provided")
@@ -64,11 +65,11 @@ def data(schema):
 
     .. note::
 
-       `schema` can be recursive and combine lists with dictionaries
+       ``schema`` can be recursive and combine lists with dictionaries
        into complex structures. You can have nested dictionaries,
        lists containing lists, dictionaries with lists as values, and so on.
 
-    A typical example of using `data`:
+    A typical example of using :func:`data`::
 
     .. code-block:: python
 
@@ -136,8 +137,8 @@ def combinator(func):
         func([1, 2, 3])
         func(1, 2, 3)
 
-    In both cases `func` receives 1, 2 and 3 as
-    positional arguments (`*args`).
+    In both cases ``func`` receives 1, 2 and 3 as
+    positional arguments (``*args``).
     """
     _2arbitrary = recursive(lambda obj: to_arbitrary(obj)
                                         if is_arbitrary(obj) else obj)
@@ -173,7 +174,7 @@ def elements(*args):
 
     or as a list::
 
-        elements([1, 2, 3]) 
+        elements([1, 2, 3])
 
     Every element has equal probability of being chosen.
     """
@@ -195,7 +196,7 @@ def one_of(*args):
         one_of([int, float])
 
     Every generator has equal probability of being chosen.
-    If you need to have a non-uniform probability distribution,
+    If you need non-uniform probability distribution,
     use the :func:`frequency` function.
     """
     if not args:
@@ -208,7 +209,7 @@ def frequency(*args):
     """Generator that yields coming from given set of generators,
     according to their probability distribution.
 
-    The distribution is just a set of tuples: `(gen, freq)`
+    The distribution is just a set of tuples: ``(gen, freq)``
     which can be passed either directly as arguments::
 
         frequency((int, 1), (float, 2))
@@ -217,13 +218,13 @@ def frequency(*args):
 
         frequency([(int, 1), (float, 2)])
 
-    The second element of tuple (`freq`) is the relative frequency
+    The second element of tuple (``freq``) is the relative frequency
     of values from particular generator, compared to those from other
     generators. In both examples above the resulting generator will
-    yield `float`\ s twice as often as `int`\ s.
+    yield ``float``\ s twice as often as ``int``\ s.
 
     Typically, it's convenient to use floating-point frequencies
-    that sum to 1.0 or integer frequencies that sum to 100.
+    that sum to ``1.0`` or integer frequencies that sum to ``100``.
     """
     if not args:
         raise ValueError("no generators to choose from")

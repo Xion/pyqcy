@@ -10,7 +10,7 @@ import collections
 def partition(pred, iterable):
     """Divides elements of given iterable in two,
     based on whether they satisfy given predicate.
-    Returns tuple: (elems_that_satisfy, elems_that_dont_satisfy).
+    :return: Tuple (elems_that_satisfy, elems_that_dont_satisfy).
     """
     pred = pred or bool
     true_elems = itertools.ifilter(pred, iterable)
@@ -30,9 +30,11 @@ def partition(pred, iterable):
 
 def optional_args(decor):
     """Decorator for decorators (sic) that are intended to take
-    optional arguments. It supports decorators written both as
-    classes or functions, as long as they are "doubly-callable".
-    For classes, this means implementing `__call__`, while
+    optional arguments.
+
+    It supports decorators written both as classes or functions,
+    as long as they are "doubly-callable".
+    For classes, this means implementing ``__call__``, while
     functions must return a function that returns a function
     that accepts a function... which is obvious, of course.
     """
@@ -51,8 +53,10 @@ def optional_args(decor):
 def recursive(func):
     ''' Constructs a function that which recursively applies given callable
     to objects, regardless of whether they are lists (iterables)
-    or dictionaries (mapping). It can be thought of as recursive, curried `map`
-    for lists, and/or equivalent for dicts.
+    or dictionaries (mapping).
+
+    It can be thought of as recursive, curried ``map`` for lists,
+    and/or equivalent for dicts.
     '''
     @functools.wraps(func)
     def recursive_func(obj, *args, **kwargs):

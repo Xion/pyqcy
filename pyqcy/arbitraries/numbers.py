@@ -11,8 +11,8 @@ from pyqcy.arbitraries import arbitrary
 def int_(min=-sys.maxint - 1, max=sys.maxint):
     """Generator for arbitrary integers.
 
-    By default, it generates value from the whole range
-    supported by the system but this can be adjusted using
+    By default, it generates values from the whole integer range
+    supported by operating system; this can be adjusted using
     parameters.
 
     :param min: A minimum value of integer to generate

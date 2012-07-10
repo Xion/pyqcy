@@ -7,6 +7,7 @@ import sys
 
 class CheckError(Exception):
     """Exception raised when property test fails.
+
     It constains the original test data for which
     the test has failed.
     """
@@ -49,6 +50,7 @@ class TestResult(object):
 
     def propagate_failure(self):
         """Re-raises the exception which caused the property test to fail.
+
         The exception is raised "seemlessly", i.e. with original traceback,
         like it was never really captured to begin with.
         """

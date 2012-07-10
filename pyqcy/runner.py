@@ -2,11 +2,9 @@
 Simple, built-in test runner.
 """
 import sys
-import os
 import traceback
 
 from pyqcy.properties import Property
-from pyqcy.results import TestResult
 from pyqcy.utils import partition
 
 
@@ -14,12 +12,14 @@ __all__ = ['main']
 
 
 def main(module='__main__', exit=True, failfast=False):
-    """Test runner. When called, it will look for all properties
-    (i.e. functions with @qc decorator) and push them through
-    a default number of checks.
-    Arguments are intended to mimic those from unittest.main().
-    Return value is the total number of properties checked
-    (provided exit=False and program doesn't terminate).
+    """Built-in test runner for properties.
+
+    When called, it will look for all properties (i.e. functions with
+    :func:`qc` decorator) and run checks on them.
+
+    Arguments are intended to mimic those from :func:`unittest.main`.
+    Return value is the total number of properties checked,
+    provided ``exit`` is ``False`` and program doesn't terminate.
     """
     if isinstance(module, basestring):
         module_name = module
@@ -49,7 +49,7 @@ def run_tests(props, failfast=False, propagate_exc=False):
             failure = failed[0]
 
             print "%s: failed (only %s out of %s tests passed)." % (
-                p.func.__name__, len(successful), p.tests_count)
+                p.func.__name__, len(r.succeeded), p.tests_count)
             print "Failure encountered for data:"
             for k, arg in failure.data.iteritems():
                 "  %s = %s" % (k, repr(arg))
@@ -72,8 +72,9 @@ def run_tests(props, failfast=False, propagate_exc=False):
 
 def print_test_results(prop, results):
     """Prints results of testing a single property.
+
     Results include any statistical information that the property
-    has generated though `yield` statements.
+    has generated though ``yield`` statements.
     """
     print "%s: passed %s test%s." % (prop.func.__name__,
         prop.tests_count,

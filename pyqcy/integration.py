@@ -31,9 +31,9 @@ class TestCase(unittest.TestCase):
             ):
                 assert min(l) == list(sorted(l))[0]
 
-    Since `TestCase` itself is a subclass of standard `unittest.TestCase`,
-    it will be discovered by :func:`unittest.main`, nosetests or similar
-    testing utilities.
+    Since :class:`TestCase` itself is a subclass of standard
+    :class:`unittest.TestCase`, it will be discovered by :func:`unittest.main`,
+    `nosetests` or similar testing utilities.
     """
     class __metaclass__(type):
         def __new__(cls, name, bases, dict_):

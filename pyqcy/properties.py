@@ -25,7 +25,7 @@ class qc(object):
     for test cases. See the section about
     :doc:`using generators <arbitraries>` for more information.
 
-    Example of using `@qc` to define a test property::
+    Example of using ``@qc`` to define a test property::
 
         @qc
         def len_behaves_correctly(
@@ -127,7 +127,7 @@ class Property(object):
             result.tags = self.__execute_test(coroutine)
         except:
             result.register_failure()
-            
+
         return result
 
     def __generate_data(self):
