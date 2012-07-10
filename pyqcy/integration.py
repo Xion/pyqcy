@@ -14,7 +14,7 @@ __all__ = ['TestCase']
 class TestCase(unittest.TestCase):
     """`unittest` test case for pyqcy properties.
 
-    Properties defined here within subclasses of `TestCase`
+    Properties defined here within subclasses of :class:`TestCase`
     will be verified automatically as a part of standard `unittest` run.
     To define them, use the typical syntax with :func:`qc` decorator::
 

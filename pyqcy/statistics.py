@@ -32,7 +32,7 @@ def collect(value):
                   i.e. a value that could be a set element
                   or dictionary key.
 
-    Typical usage of ``collect`` is as follows:
+    Typical usage of :func:`collect` is as follows:
 
     .. code-block:: python
 
@@ -67,7 +67,7 @@ def classify(condition, label):
     :param condition: Condition that the test data should satisfy
                       in order for the test case to be stamped with ``label``.
     :param label: A label to be associated with this test case
-                  if `condition` turns out to be true
+                  if ``condition`` turns out to be true
 
     Typical usage is as follows:
 

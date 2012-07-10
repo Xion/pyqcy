@@ -69,7 +69,7 @@ def data(schema):
        into complex structures. You can have nested dictionaries,
        lists containing lists, dictionaries with lists as values, and so on.
 
-    A typical example of using :func:`data`::
+    A typical example of using :func:`data`:
 
     .. code-block:: python
 
@@ -84,7 +84,8 @@ def data(schema):
             })
         ):
             response = create_user(request['login'], request['password'])
-            assert response['status'] == "OK
+            assert response['status'] == "OK"
+
     """
     if schema is None:
         raise ValueError("no schema specified")
