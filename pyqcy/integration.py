@@ -35,8 +35,17 @@ class TestCase(unittest.TestCase):
     it will be discovered by :func:`unittest.main`, nosetests or similar
     testing utilities.
     """
-    def test(self):
-        """Runs tests for all properties defined within this class."""
-        props = [v for v in self.__class__.__dict__.itervalues()
-                 if isinstance(v, Property)]
-        run_tests(props, propagate_exc=True)
+    class __metaclass__(type):
+        def __new__(cls, name, bases, dict_):
+            """Create ``TestCase`` class that contains properties to check."""
+            properties = dict((k, v) for (k, v) in dict_.iteritems()
+                              if isinstance(v, Property))
+
+            # include a test() method that runs all property tests
+            # and has proper docstring to show when verbose mode is used
+            def test(self):
+                run_tests(properties.itervalues(), propagate_exc=True)
+            test.__doc__ = "[pyqcy] %s" % ", ".join(properties.iterkeys())
+
+            dict_['test'] = test
+            return type.__new__(cls, name, bases, dict_)
