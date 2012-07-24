@@ -1,18 +1,42 @@
 """
 Unit tests for the pyqcy test runner.
 """
+import sys
+
 import unittest
-from pyqcy import *
+from mocktest import MockTransaction, when, expect
+
+from pyqcy import qc, int_, main
+
+
+@qc
+def addition_success(
+    x=int_(min=0), y=int_(min=0)
+):
+    the_sum = x + y
+    assert the_sum >= x and the_sum >= y
+
+
+@qc
+def addition_fail(
+    x=int_(min=0), y=int_(min=0)
+):
+    the_sum = x + y
+    assert the_sum >= x and the_sum < y
 
 
 class Runner(unittest.TestCase):
     """Test cases for the pyqcy test runner (pyqcy.main)."""
 
     def test_runner(self):
-        # Tests the runner. This uses all the @qc properties
-        # from all test modules imported by nosetests, and runs
-        # them under our test harness to verify it functions
-        # properly.
         from pyqcy.properties import Property
-        assert main(exit=False) == len([obj for obj in globals().itervalues()
-                                        if isinstance(obj, Property)])
+
+        with MockTransaction:
+            when(sys).exit.then_return(None)
+            assert main(__name__, exit=True) == len([
+                obj for obj in globals().itervalues()
+                if isinstance(obj, Property)
+            ])
+
+            # we have one failing property so expect a failure
+            expect(sys).exit.where(lambda code: code != 0).once()

@@ -70,5 +70,5 @@ and install in development mode (preferably inside a virtualenv):
 
 Then you should be able to run tests through _nose_:
 
-    $ pip install nose
+    $ pip install nose mocktest
     $ nosetests
