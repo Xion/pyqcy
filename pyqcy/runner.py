@@ -48,15 +48,16 @@ def run_tests(props, failfast=False, propagate_exc=False):
         if failed:
             failure = failed[0]
 
+            success_count = p.tests_count - len(failed)
             print "%s: failed (only %s out of %s tests passed)." % (
-                p.func.__name__, len(r.succeeded), p.tests_count)
+                p.func.__name__, success_count, p.tests_count)
             print "Failure encountered for data:"
             for k, arg in failure.data.iteritems():
                 "  %s = %s" % (k, repr(arg))
 
             print "Exception:"
             traceback.print_exception(type(failure.exception),
-                failure.exception, failure.traceback)
+                                      failure.exception, failure.traceback)
 
             success = False
             if failfast:
@@ -77,8 +78,8 @@ def print_test_results(prop, results):
     has generated though ``yield`` statements.
     """
     print "%s: passed %s test%s." % (prop.func.__name__,
-        prop.tests_count,
-        "s" if prop.tests_count != 1 else "")
+                                     prop.tests_count,
+                                     "s" if prop.tests_count != 1 else "")
 
     # gather and display statistics
     with_stats, without_stats = partition(lambda r: len(r) > 0,
