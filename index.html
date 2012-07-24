@@ -18,10 +18,9 @@
 
   </head>
   <body>
-
       <div id="header">
         <nav>
-          <li class="fork"><a href="https://github.com/Xion/pyqcy">Fork On GitHub</a></li>
+          <li class="fork"><a href="https://github.com/Xion/pyqcy">View On GitHub</a></li>
           <li class="downloads"><a href="https://github.com/Xion/pyqcy/zipball/master">ZIP</a></li>
           <li class="downloads"><a href="https://github.com/Xion/pyqcy/tarball/master">TAR</a></li>
           <li class="title">DOWNLOADS</li>
@@ -49,7 +48,7 @@ Based on that, <em>pyqcy</em> will automatically generate test cases - hundreds 
 <h2>Example</h2>
 
 <div class="highlight">
-<pre><span class="kn">from</span> <span class="nn">pyqcy</span> <span class="kn">import</span> <span class="n">qc</span><span class="p">,</span> <span class="n">int_</span> <span class="n">main</span>
+<pre><span class="kn">from</span> <span class="nn">pyqcy</span> <span class="kn">import</span> <span class="n">qc</span><span class="p">,</span> <span class="n">int_</span><span class="p">,</span> <span class="n">main</span>
 
 <span class="nd">@qc</span>
 <span class="k">def</span> <span class="nf">addition_actually_works</span><span class="p">(</span>
@@ -84,123 +83,10 @@ $ cd pyqcy
 $ ./setup.py develop
 </code></pre>
 
-<h2>Usage</h2>
+<h2>Learn more</h2>
 
-<p>Testing with <em>pyqcy</em> is mainly about writing <strong>properties</strong> which we expect for our code to hold.
-They take the form of a Python function decorated with <code>@qc</code>:</p>
-
-<div class="highlight">
-<pre><span class="kn">from</span> <span class="nn">pyqcy</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="nd">@qc</span>
-<span class="k">def</span> <span class="nf">sorting_preserves_length</span><span class="p">(</span>
-    <span class="n">l</span><span class="o">=</span><span class="n">list_</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
-<span class="p">):</span>
-    <span class="n">before_sort</span> <span class="o">=</span> <span class="n">l</span>
-    <span class="n">after_sort</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">before_set</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">after_sort</span><span class="p">)</span>
-</pre>
-</div>
-
-
-<p>Inside such function, parameters work like quantified variables. We can use the default arguments' syntax
-to constrain the set of values for those variables. So here we define <code>l</code>
-as <strong>arbitrary</strong>, non-empty <code>list</code> of <code>int</code>s with maximum length of 128 items.
-For every test for this property, <em>pyqcy</em> will automatically generate appropriate list and see
-whether our assertions hold ground.</p>
-
-<h3>Value generators</h3>
-
-<p>Support for all standard Python types - including lists (<code>list<em></em></code>), tuples (<code>dict</code>)
-and dictionaries (<code>dict_</code>) - is readily available.
-If we want to test against instances of custom type, we have to say how to construct an arbitrary
-(i.e. random) instance of this type:</p>
-
-<div class="highlight">
-<pre><span class="kn">from</span> <span class="nn">pyqcy</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="nd">@arbitrary</span><span class="p">(</span><span class="n">OurOwnClass</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">our_own</span><span class="p">():</span>
-    <span class="n">obj</span> <span class="o">=</span> <span class="n">OurOwnClass</span><span class="p">()</span>
-    <span class="n">obj</span><span class="o">.</span><span class="n">some_string</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">str_</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">32</span><span class="p">))</span>
-    <span class="n">obj</span><span class="o">.</span><span class="n">some_float</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">float_</span><span class="p">())</span>
-    <span class="k">return</span> <span class="n">obj</span>
-</pre>
-</div>
-
-
-<p>Once this is done, we can use the new generator to define properties regarding our class:</p>
-
-<div class="highlight">
-<pre><span class="nd">@qc</span>
-<span class="k">def</span> <span class="nf">forbs_correctly</span><span class="p">(</span><span class="n">obj</span><span class="o">=</span><span class="n">OurOwnClass</span><span class="p">):</span> <span class="c"># obj=our_own works too</span>
-    <span class="k">assert</span> <span class="n">obj</span><span class="o">.</span><span class="n">forb</span><span class="p">()</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">some_string</span><span class="p">)</span> <span class="o">+</span> <span class="mi">42</span>
-</pre>
-</div>
-
-
-<h3>Statistics</h3>
-
-<p>The test cases for our properties are generated at random. Because of that, it could be useful
-to have a little more insight on what part of problem's domain they actually cover. <em>pyqcy</em>
-has some statistical tools that help to obtain this information.</p>
-
-<p>First one is the <code>collect</code> function. As the name implies, it <strong>collects</strong> test
-cases that share particular value (given as argument). At the end, a "histogram" of those
-values is displayed, showing how often they occurred:</p>
-
-<div class="highlight">
-<pre><span class="kn">from</span> <span class="nn">pyqcy</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="nd">@qc</span>
-<span class="k">def</span> <span class="nf">sorting_short_lists</span><span class="p">(</span>
-    <span class="n">l</span><span class="o">=</span><span class="n">list_</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="p">):</span>
-    <span class="k">yield</span> <span class="n">collect</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
-    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">l</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
-</pre>
-</div>
-
-
-<pre><code>sorting_short_lists: passed 100 tests.
-20.00%: 1
-20.00%: 2
-20.00%: 3
-20.00%: 4
-20.00%: 5
-</code></pre>
-
-<p>For more complicated (or coarse) clustering, there is also the <code>classify</code> function.
-Passed a boolean condition and a label, it will "stamp" a particular test case with given label
-if the condition is true:</p>
-
-<div class="highlight">
-<pre><span class="kn">from</span> <span class="nn">pyqcy</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">random</span>
-
-<span class="nd">@qc</span>
-<span class="k">def</span> <span class="nf">sorting_works</span><span class="p">(</span><span class="n">l</span><span class="o">=</span><span class="n">list_</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">99</span><span class="p">)):</span>
-    <span class="k">yield</span> <span class="n">classify</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s">"empty list"</span><span class="p">)</span>
-    <span class="k">yield</span> <span class="n">classify</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span> <span class="s">"short list"</span><span class="p">)</span>
-    <span class="k">yield</span> <span class="n">classify</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">50</span><span class="p">,</span> <span class="s">"long list"</span><span class="p">)</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">j</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
-</pre>
-</div>
-
-
-<pre><code>sorting_works: passed 100 tests.
- 1.00%: empty list, short list
-10.00%: short list
-50.00%: long list
-40.00%: &lt;rest&gt;
-</code></pre>
-
-<p>Note that in current version of <em>pyqcy</em>, it is <strong>essential</strong> to <code>yield</code> any statistical
-information (such as <code>collect</code> and <code>classify</code> calls) so it can be picked up
-by the test harness.</p>
+<p>Check out <a href="http://pyqcy.readthedocs.org">documentation</a> for detailed
+usage instructions and more information.</p>
 
 <h2>Going further</h2>
 
