@@ -44,7 +44,8 @@ class TestCase(unittest.TestCase):
             # include a test() method that runs all property tests
             # and has proper docstring to show when verbose mode is used
             def test(self):
-                run_tests(properties.itervalues(), propagate_exc=True)
+                run_tests(properties.itervalues(),
+                          verbosity=0, propagate_exc=True)
             test.__doc__ = "[pyqcy] %s" % ", ".join(properties.iterkeys())
 
             dict_['test'] = test

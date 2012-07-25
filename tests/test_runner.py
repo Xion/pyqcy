@@ -6,7 +6,7 @@ import sys
 import unittest
 from mocktest import MockTransaction, when, expect
 
-from pyqcy import qc, int_, main
+from pyqcy import qc, int_, list_, collect, main
 
 
 @qc
@@ -23,6 +23,14 @@ def addition_fail(
 ):
     the_sum = x + y
     assert the_sum >= x and the_sum < y
+
+
+@qc
+def statistics_work(
+    l=list_(int, min_length=1, max_length=100)
+):
+    yield collect(len(l))
+    assert list(sorted(l))[0] == min(l)
 
 
 class Runner(unittest.TestCase):

@@ -18,11 +18,14 @@ class CheckError(Exception):
     def __str__(self):
         msg = "test failed"
         if self.cause is not None:
-            msg += " due to %s: %s" % (type(self.cause).__name__, self.cause)
+            msg += " due to %s" % type(self.cause).__name__
+            cause = str(self.cause)
+            if cause:
+                msg += ": " + cause
 
         res = [msg]
         res.append("Failure encountered for data:")
-        res.extend("  %s = %s" % i for i in self.test_data.iteritems())
+        res.extend(["  %s = %s" % i for i in self.test_data.iteritems()])
         return os.linesep.join(res)
 
 

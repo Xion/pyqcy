@@ -11,7 +11,7 @@ from pyqcy.utils import partition
 __all__ = ['main']
 
 
-def main(module='__main__', exit=True, failfast=False):
+def main(module='__main__', exit=True, verbosity=1, failfast=False):
     """Built-in test runner for properties.
 
     When called, it will look for all properties (i.e. functions with
@@ -30,16 +30,17 @@ def main(module='__main__', exit=True, failfast=False):
     props = [v for v in module.__dict__.itervalues()
              if isinstance(v, Property)]
 
-    success = run_tests(props, failfast=failfast)
+    success = run_tests(props, verbosity=verbosity, failfast=failfast)
     if exit:
         sys.exit(0 if success else 1)
     return len(props)
 
 
-def run_tests(props, failfast=False, propagate_exc=False):
+def run_tests(props, verbosity=1, failfast=False, propagate_exc=False):
     """Executes tests for given list of properties.
     Returns boolean flag indicating if all the tests succeeded.
     """
+    verbosity = verbosity or 0
     success = True
 
     for p in props:
@@ -48,16 +49,17 @@ def run_tests(props, failfast=False, propagate_exc=False):
         if failed:
             failure = failed[0]
 
-            success_count = p.tests_count - len(failed)
-            print "%s: failed (only %s out of %s tests passed)." % (
-                p.func.__name__, success_count, p.tests_count)
-            print "Failure encountered for data:"
-            for k, arg in failure.data.iteritems():
-                print "  %s = %s" % (k, repr(arg))
+            if verbosity >= 1:
+                success_count = p.tests_count - len(failed)
+                print "%s: failed (only %s out of %s tests passed)." % (
+                    p.func.__name__, success_count, p.tests_count)
+                print "Failure encountered for data:"
+                for k, arg in failure.data.iteritems():
+                    print "  %s = %s" % (k, repr(arg))
 
-            print "Exception:"
-            traceback.print_exception(type(failure.exception),
-                                      failure.exception, failure.traceback)
+                print "Exception:"
+                traceback.print_exception(type(failure.exception),
+                                          failure.exception, failure.traceback)
 
             success = False
             if failfast:
@@ -65,8 +67,9 @@ def run_tests(props, failfast=False, propagate_exc=False):
             if propagate_exc:
                 failure.propagate_failure()
         else:
-            tags = (r.tags for r in results)
-            print_test_results(p, tags)
+            if verbosity >= 2:
+                tags = (r.tags for r in results)
+                print_test_results(p, tags)
 
     return success
 
