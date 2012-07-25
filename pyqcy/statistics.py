@@ -41,7 +41,7 @@ def collect(value):
             l=list_(int, min_length=1, max_length=100)
         ):
             yield collect(len(l))
-            assert list(sorted(l))[0] = min(l)
+            assert list(sorted(l))[0] == min(l)
 
     Checking the above property will produce output similar to this:
 
