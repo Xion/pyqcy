@@ -38,15 +38,16 @@ class TestCase(unittest.TestCase):
     class __metaclass__(type):
         def __new__(cls, name, bases, dict_):
             """Create ``TestCase`` class that contains properties to check."""
-            properties = dict((k, v) for (k, v) in dict_.iteritems()
-                              if isinstance(v, Property))
+            properties = [(k, v) for (k, v) in dict_.iteritems()
+                          if isinstance(v, Property)]
 
-            # include a test() method that runs all property tests
-            # and has proper docstring to show when verbose mode is used
-            def test(self):
-                run_tests(properties.itervalues(),
-                          verbosity=0, propagate_exc=True)
-            test.__doc__ = "[pyqcy] %s" % ", ".join(properties.iterkeys())
+            # create a test_*() method for every property
+            # with proper name and docstring
+            for name, prop in properties:
+                def test(self):
+                    run_tests([prop], verbosity=0, propagate_exc=True)
+                test.__name__ = "test_%s" % name
+                test.__doc__ = "[pyqcy] %s" % name
+                dict_[test.__name__] = test
 
-            dict_['test'] = test
             return type.__new__(cls, name, bases, dict_)
