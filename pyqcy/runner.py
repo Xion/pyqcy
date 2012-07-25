@@ -53,7 +53,7 @@ def run_tests(props, failfast=False, propagate_exc=False):
                 p.func.__name__, success_count, p.tests_count)
             print "Failure encountered for data:"
             for k, arg in failure.data.iteritems():
-                "  %s = %s" % (k, repr(arg))
+                print "  %s = %s" % (k, repr(arg))
 
             print "Exception:"
             traceback.print_exception(type(failure.exception),
