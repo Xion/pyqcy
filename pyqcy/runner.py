@@ -82,8 +82,8 @@ def print_test_results(prop, results):
                                      "s" if prop.tests_count != 1 else "")
 
     # gather and display statistics
-    with_stats, without_stats = partition(lambda r: len(r) > 0,
-                                          list(results))
+    results = list(results)
+    with_stats, without_stats = partition(lambda r: len(r) > 0, results)
     if len(with_stats) > 0:
         stats = {}
         for s in with_stats:
