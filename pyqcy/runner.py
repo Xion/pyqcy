@@ -11,7 +11,7 @@ from pyqcy.utils import partition
 __all__ = ['main']
 
 
-def main(module='__main__', exit=True, verbosity=1, failfast=False):
+def main(module='__main__', exit=True, verbosity=2, failfast=False):
     """Built-in test runner for properties.
 
     When called, it will look for all properties (i.e. functions with
