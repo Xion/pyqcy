@@ -33,7 +33,11 @@ class Integration(unittest.TestCase):
 
     def test_property_names_in_test_description(self):
         from pyqcy.properties import Property
-        test_description = self.qc_suite._tests[0]._testMethodDoc
-        assert all(k in test_description
+
+        test_descriptions = set(tm._testMethodDoc
+                                for tm in self.qc_suite._tests)
+
+        assert all("pyqcy" in td for td in test_descriptions)
+        assert all(any(k in td for td in test_descriptions)
                    for (k, v) in Integration.Sorting.__dict__.iteritems()
                    if isinstance(v, Property))
