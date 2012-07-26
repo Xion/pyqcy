@@ -41,13 +41,25 @@ class TestCase(unittest.TestCase):
             properties = [(k, v) for (k, v) in dict_.iteritems()
                           if isinstance(v, Property)]
 
-            # create a test_*() method for every property
-            # with proper name and docstring
             for name, prop in properties:
-                def test(self):
-                    run_tests([prop], verbosity=0, propagate_exc=True)
-                test.__name__ = "test_%s" % name
-                test.__doc__ = "[pyqcy] %s" % name
+                test = cls._create_test_method(name, prop)
                 dict_[test.__name__] = test
 
             return type.__new__(cls, name, bases, dict_)
+
+        @staticmethod
+        def _create_test_method(name, prop):
+            """Creates a ``test_X`` method corresponding to
+            given :class:`Property`.
+
+            :param name: Name of the property
+            :param prop: :class:`Property` object
+            :return: Test method
+            """
+            def test(self):
+                run_tests([prop], verbosity=0, propagate_exc=True)
+
+            test.__name__ = "test_%s" % name
+            test.__doc__ = "[pyqcy] %s" % name
+
+            return test
