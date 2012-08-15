@@ -85,6 +85,23 @@ def list_(of, min_length=0, max_length=1024):
 
 
 @arbitrary
+def set_(of, min_length=0, max_length=1024):
+    """Generator for arbitrary sets.
+
+    Parameters for this generator allow for adjusting the size
+    of resulting set and elements they contain.
+
+    :param of: Generator for set elements
+    :param min_length: A minimum size of set to generate
+    :param max_length: A maximum size of set to generate
+    """
+    size = random.randint(min_length, max_length)
+    if is_arbitrary(of):
+        return set(next(of) for _ in xrange(size))
+    return set(random.choice(of) for _ in xrange(size))
+
+
+@arbitrary
 def dict_(keys=None, values=None, items=None,
           min_length=0, max_length=1024):
     """Generator for arbitrary dictionaries.

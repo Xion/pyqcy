@@ -88,7 +88,7 @@ class Strings(unittest.TestCase):
         @qc
         def email_is_email(s=email()):
             assert '@' in s
-            assert s.rfind('.') > s.find('@') # at least one dot after @
+            assert s.rfind('.') > s.find('@')  # at least one dot after @
 
         pattern_is_a_pattern.test()
         email_is_email.test()
@@ -119,6 +119,16 @@ class Collections(unittest.TestCase):
             assert len(t) == 2
 
         two_is_two.test()
+
+    def test_set_arbitrary(self):
+        @qc
+        def set_inclusion_works(
+            s=set_(of=int, min_length=1, max_length=64)
+        ):
+            for elem in s:
+                assert set([elem]).issubset(s)
+
+        set_inclusion_works.test()
 
     def test_dict_arbitrary(self):
         @qc
