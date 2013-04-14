@@ -141,8 +141,8 @@ def combinator(func):
     In both cases ``func`` receives 1, 2 and 3 as
     positional arguments (``*args``).
     """
-    _2arbitrary = recursive(lambda obj: to_arbitrary(obj)
-                                        if is_arbitrary(obj) else obj)
+    _2arbitrary = recursive(
+        lambda obj: to_arbitrary(obj) if is_arbitrary(obj) else obj)
 
     @arbitrary
     @functools.wraps(func)
