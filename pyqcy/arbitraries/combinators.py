@@ -167,7 +167,7 @@ def combinator(func):
 
 @combinator
 def elements(*args, **kwargs):
-    """Generator that returns random element(s) from given set.
+    """Generator that returns random elements from given set.
 
     Elements can be passed either directly as arguments::
 
@@ -178,9 +178,24 @@ def elements(*args, **kwargs):
         elements([1, 2, 3])
 
     Every element has equal probability of being chosen.
+
+    :param count: Optional number of elements in every returned subset.
+                  If omitted, a single element will be yield every time.
+                  If provided, it should always be passed as keyword argument,
+                  e.g. ``elements(range(10), count=3)``.
+
+                  This can be also a generator - such as :func:`int_` -
+                  if there's a need to randomize the subset size, too.
+
+    .. note::
+
+        There is difference between ``elements(foo)``
+        and ``elements(foo, count=1)``. The first form returns
+        random element from the set ``foo``, while the second returns random
+        *1-element subset* of ``foo`` - ``x`` vs ``[x]``, essentially.
     """
     if not args:
-        raise ValueError("cannot pick random element from empty sequence")
+        raise ValueError("cannot pick random elements from empty sequence")
 
     count = kwargs.get('count', None)
     if count is None:
