@@ -146,6 +146,8 @@ class Collections(unittest.TestCase):
 class Combinators(unittest.TestCase):
     """Test cases for arbitrary combinators.."""
 
+    ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
+
     def test_apply(self):
         @qc
         def apply_works_with_functions(
@@ -182,7 +184,7 @@ class Combinators(unittest.TestCase):
 
         @qc
         def data_works_with_dictionaries(x=data({
-            'login': str_(of='abcdefghijklmnopqrstuvwxyz',
+            'login': str_(of=self.ALPHABET,
                           min_length=4, max_length=16),
             'password': str_(min_length=8, max_length=64),
         })):
@@ -197,11 +199,28 @@ class Combinators(unittest.TestCase):
 
     def test_elements_arbitrary(self):
         @qc
-        def set_of_elements(x=elements("abc")):
+        def pick_one(x=elements("abc")):
             assert len(x) == 1
             assert x in "abc"
 
-        set_of_elements.test()
+        @qc
+        def pick_few_from_set(
+            x=elements(self.ALPHABET, count=5)
+        ):
+            assert len(x) == 5
+            assert set(x) < set(self.ALPHABET)
+
+        @qc
+        def pick_random_number_from_set(
+            x=elements(self.ALPHABET,
+                       count=int_(min=1, max=len(self.ALPHABET) / 2))
+        ):
+            assert 1 <= len(x) <= len(self.ALPHABET) / 2
+            assert set(x) < set(self.ALPHABET)
+
+        pick_one.test()
+        pick_few_from_set.test()
+        pick_random_number_from_set.test()
 
     def test_one_of_arbitrary(self):
         @qc
