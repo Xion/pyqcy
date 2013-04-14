@@ -1,7 +1,7 @@
 """
 pyqcy :: QuickCheck-like testing framework for Python
 """
-__version__ = "0.4.4"
+__version__ = "0.4.5"
 __author__ = 'Karol Kuczmarski "Xion"'
 __license__ = "BSD"
 
