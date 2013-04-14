@@ -67,7 +67,7 @@ setup(
     version=pyqcy.__version__,
     description="QuickCheck-like testing framework for Python",
     long_description=__doc__,
-    author='Karol Kuczmarski "Xion"',
+    author=pyqcy.__author__,
     author_email="karol.kuczmarski@gmail.com",
     url="http://xion.io/pyqcy",
     license="Simplified BSD",
