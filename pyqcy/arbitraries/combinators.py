@@ -182,12 +182,14 @@ def elements(*args, **kwargs):
     if not args:
         raise ValueError("cannot pick random element from empty sequence")
 
-    count = kwargs.get('count', 1)
+    count = kwargs.get('count', None)
+    if count is None:
+        return random.choice(args)
     if is_arbitrary(count):
         count = next(to_arbitrary(count))
 
     count = min(count, len(args))
-    return random.choice(args) if count == 1 else random.sample(args, count)
+    return random.sample(args, count)
 
 
 @combinator

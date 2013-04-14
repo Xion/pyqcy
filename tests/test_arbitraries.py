@@ -147,6 +147,7 @@ class Combinators(unittest.TestCase):
     """Test cases for arbitrary combinators.."""
 
     ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
+    NUMBERS = range(1, 10)
 
     def test_apply(self):
         @qc
@@ -199,9 +200,16 @@ class Combinators(unittest.TestCase):
 
     def test_elements_arbitrary(self):
         @qc
-        def pick_one(x=elements("abc")):
+        def pick_one_element(x=elements(self.NUMBERS)):
+            assert isinstance(x, int)
+            assert x in self.NUMBERS
+
+        @qc
+        def pick_subset_of_count_one(
+            x=elements(self.NUMBERS, count=1)
+        ):
             assert len(x) == 1
-            assert x in "abc"
+            assert set(x) < set(self.NUMBERS)
 
         @qc
         def pick_few_from_set(
@@ -218,7 +226,8 @@ class Combinators(unittest.TestCase):
             assert 1 <= len(x) <= len(self.ALPHABET) / 2
             assert set(x) < set(self.ALPHABET)
 
-        pick_one.test()
+        pick_one_element.test()
+        pick_subset_of_count_one.test()
         pick_few_from_set.test()
         pick_random_number_from_set.test()
 
