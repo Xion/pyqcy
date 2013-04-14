@@ -166,8 +166,8 @@ def combinator(func):
 
 
 @combinator
-def elements(*args):
-    """Generator that returns a random element from given set.
+def elements(*args, **kwargs):
+    """Generator that returns random element(s) from given set.
 
     Elements can be passed either directly as arguments::
 
@@ -181,7 +181,13 @@ def elements(*args):
     """
     if not args:
         raise ValueError("cannot pick random element from empty sequence")
-    return random.choice(args)
+
+    count = kwargs.get('count', 1)
+    if is_arbitrary(count):
+        count = next(to_arbitrary(count))
+
+    count = min(count, len(args))
+    return random.choice(args) if count == 1 else random.sample(args, count)
 
 
 @combinator
