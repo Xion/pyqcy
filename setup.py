@@ -57,10 +57,36 @@ Then check these links to find out more:
 * `documentation <http://pyqcy.readthedocs.org>`_
 * `github <http://github.com/Xion/pyqcy>`_
 """
+import ast
 import os
 from setuptools import setup, find_packages
 
-import pyqcy
+
+def read_tags(filename):
+    """Reads values of "magic tags" defined in the given Python file.
+
+    :param filename: Python filename to read the tags from
+    :return: Dictionary of tags
+    """
+    with open(filename) as f:
+        ast_tree = ast.parse(f.read(), filename)
+
+    res = {}
+    for node in ast.walk(ast_tree):
+        if type(node) is not ast.Assign:
+            continue
+
+        target = node.targets[0]
+        if type(target) is not ast.Name:
+            continue
+
+        if not (target.id.startswith('__') and target.id.endswith('__')):
+            continue
+
+        name = target.id[2:-2]
+        res[name] = ast.literal_eval(node.value)
+
+    return res
 
 
 def read_requirements(filename='requirements.txt'):
@@ -93,15 +119,19 @@ def read_requirements(filename='requirements.txt'):
         return list(map(extract_requirement, filter(valid_line, lines)))
 
 
+tags = read_tags(os.path.join('pyqcy', '__init__.py'))
+__doc__ = __doc__.format(**tags)
+
+
 setup(
     name="pyqcy",
-    version=pyqcy.__version__,
-    description="QuickCheck-like testing framework for Python",
+    version=tags['version'],
+    description=tags['description'],
     long_description=__doc__,
-    author=pyqcy.__author__,
-    author_email="karol.kuczmarski@gmail.com",
+    author=tags['author'],
+    author_email=tags['author_email'],
     url="http://xion.io/pyqcy",
-    license="Simplified BSD",
+    license=tags['license'],
 
     classifiers=[
         "Development Status :: 3 - Alpha",
