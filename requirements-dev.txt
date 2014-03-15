@@ -1,0 +1,4 @@
+-e .
+-r requirements-test.txt
+
+tox>=1.4
