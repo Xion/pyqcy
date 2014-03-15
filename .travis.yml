@@ -4,6 +4,6 @@ python:
     - "2.7"
 
 install:
-    - python ./setup.py install
-    - pip install nose mocktest --use-mirrors
+    - pip install -e .
+    - pip install requirements-test.txt --use-mirrors
 script: nosetests

@@ -1,0 +1,4 @@
+include LICENSE
+include README.md
+include requirements-test.txt
+recursive-exclude * *.pyc
